@@ -109,13 +109,17 @@ void autonomous(void) {
 void usercontrol(void) {
   // Variables that need to be used between loops
   bool forkliftActive = false;
+  bool reversed = false;
   bool driving = false;
   bool turning = false;
 
   while (1) {
+    // Reversed driving mode
+    if (Controller1.ButtonY.pressing()) reversed = !reversed;
+
     // Drive control
-    int const YPos = Controller1.Axis3.position();
-    int const XPos = Controller1.Axis1.position();
+    int const YPos = (reversed) ? -(Controller1.Axis3.position()) : Controller1.Axis3.position();
+    int const XPos = (reversed) ? -(Controller1.Axis1.position()) : Controller1.Axis1.position(); 
 
     if (YPos > 5 || YPos < -5) {
       Drivetrain.setDriveVelocity(abs(YPos), pct);
