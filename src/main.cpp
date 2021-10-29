@@ -16,6 +16,7 @@ using namespace vex;
 // ================= Globals ================= //
 
 competition Competition;
+int selectedAutonRoutine;
 
 // ============ Component Actions ============ //
 
@@ -23,6 +24,8 @@ competition Competition;
 // robot (e.g. bucket, belt, arms)
 
 // =========== Autonomous Routines =========== //
+
+typedef void (*autonRoutineFn) (void);
 
 /*
   Routine 0: Sweep
@@ -94,7 +97,13 @@ void pre_auton(void) {
 }
 
 void autonomous(void) {
-  // TODO: Run selected routine
+  autonRoutineFn routines[] = 
+  { 
+    autonRoutine0,
+    autonRoutine1 
+  };
+
+  routines[selectedAutonRoutine]();
 }
 
 void usercontrol(void) {
