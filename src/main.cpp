@@ -15,7 +15,6 @@ using namespace vex;
 // ================= Globals ================= //
 
 competition Competition;
-int autonRoutine;
 
 // ============ Component Actions ============ //
 
