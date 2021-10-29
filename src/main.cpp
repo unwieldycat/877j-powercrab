@@ -109,8 +109,33 @@ void autonomous(void) {
 void usercontrol(void) {
   // Variables that need to be used between loops
   bool forkliftActive = false;
+  bool driving = false;
+  bool turning = false;
 
   while (1) {
+    // Drive control
+    int const YPos = Controller1.Axis3.position();
+    int const XPos = Controller1.Axis1.position();
+
+    if (YPos > 5 || YPos < -5) {
+      Drivetrain.setDriveVelocity(abs(YPos), pct);
+      if (YPos < 0) Drivetrain.drive(reverse);
+      if (YPos > 0) Drivetrain.drive(forward);
+      driving = true;
+    } else if (driving) {
+      Drivetrain.setDriveVelocity(0, pct);
+    }
+
+    if (XPos > 5 || XPos < -5) {
+      Drivetrain.setTurnVelocity(abs(YPos), pct);
+      if (YPos < 0) Drivetrain.turn(left);
+      if (YPos > 0) Drivetrain.turn(right);
+      turning = true;
+    } else if (turning) {
+      Drivetrain.setTurnVelocity(0, pct);
+    }
+
+    // Forklift control
     bool const L2Pressing = Controller1.ButtonL2.pressing();
     bool const L1Pressing = Controller1.ButtonL2.pressing();
 
