@@ -37,8 +37,6 @@ int autonRoutine;
 void autonRoutine0() {
   // Initialize
   Drivetrain.setHeading(0, deg);
-  Drivetrain.setDriveVelocity(100, pct);
-  Drivetrain.setTurnVelocity(50, pct);
 
   // Actions
   Drivetrain.driveFor(900, mm, true);
@@ -66,8 +64,6 @@ void autonRoutine0() {
 void autonRoutine1() {
   // Initialize
   Drivetrain.setHeading(0, deg);
-  Drivetrain.setDriveVelocity(100, pct);
-  Drivetrain.setTurnVelocity(50, pct);
 
   /*
     TODO:
