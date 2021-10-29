@@ -65,14 +65,18 @@ void autonRoutine1() {
   // Initialize
   Drivetrain.setHeading(0, deg);
 
+  // Actions
+  Drivetrain.driveFor(900, mm, true);
+  Drivetrain.turnToHeading(90, deg, true);
+  Drivetrain.driveFor(2100, mm, true);
+  Drivetrain.turnToHeading(270, deg, true);
+  Drivetrain.driveFor(2100, mm, true);
+  Drivetrain.turnToHeading(0, deg, true);
+
   /*
     TODO:
-    > Drive foward to be on same axis as ring clusters
-    > Turn 90 degrees to the right
-    > Collect both rings
-    > Turn 180 degrees to come back to starting position
-    > Just before starting position, face rear towards goal
-    > Drive to goal and activate bucket
+    > Drive up to goal
+    > Use bucket
   */
 }
 
