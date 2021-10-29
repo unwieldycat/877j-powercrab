@@ -6,6 +6,7 @@
 // [Name]               [Type]        [Port(s)]
 // forkliftMotor        motor         3               
 // Drivetrain           drivetrain    1, 2, 20        
+// Controller1          controller                    
 // ---- END VEXCODE CONFIGURED DEVICES ----
 
 #include "vex.h"
@@ -93,8 +94,27 @@ void autonomous(void) {
 }
 
 void usercontrol(void) {
+  // Variables that need to be used between loops
+  bool forkliftActive = false;
+
   while (1) {
-    // TODO: Listen for changes on controller
+    bool const L2Pressing = Controller1.ButtonL2.pressing();
+    bool const L1Pressing = Controller1.ButtonL2.pressing();
+
+    if (!L2Pressing && !L1Pressing && forkliftActive) {
+      forkliftMotor.stop(coast);
+      forkliftActive = false;
+    } 
+
+    if (L2Pressing && !L1Pressing) {
+      forkliftMotor.spin(reverse, 100, pct);
+      forkliftActive = true;
+    }
+
+    if (L1Pressing && !L2Pressing) {
+      forkliftMotor.spin(forward, 100, pct);
+      forkliftActive = true;
+    }
 
     wait(20, msec);
   }
