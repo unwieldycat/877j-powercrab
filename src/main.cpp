@@ -27,6 +27,13 @@ int selectedAutonRoutine;
 
 typedef void (*autonRoutineFn) (void);
 
+// Register all autonomous routines
+autonRoutineFn routines[] = 
+{ 
+  autonRoutine0,
+  autonRoutine1 
+};
+
 /*
   Routine 0: Sweep
 
@@ -93,16 +100,38 @@ void pre_auton(void) {
   // TODO: Initialize robot components
   // (e.g. retract arms, lower buckets, calibrate sensors)
 
-  // TODO: Create a routine selection system
+  bool selected = false;
+  while (!selected) {
+    // Read user input
+    bool const RightPressing = Controller1.ButtonRight.pressing();
+    bool const LeftPressing = Controller1.ButtonLeft.pressing();
+    bool const ButtonAPressing = Controller1.ButtonA.pressing();
+
+    if (
+      RightPressing && 
+      selectedAutonRoutine < (sizeof(routines)/sizeof(*routines))
+    ) selectedAutonRoutine++;
+
+    if (LeftPressing && selectedAutonRoutine > 0) selectedAutonRoutine--;
+
+    if (ButtonAPressing) selected = true;
+
+    // Draw topbar
+    Brain.Screen.setFillColor(270);
+    Brain.Screen.drawRectangle(0, 0, 480, 32);
+    Brain.Screen.printAt(240, 16, "-- SELECT AUTON ROUTINE --");
+
+    /*
+      TODO:
+      > Print selection to screen
+    */
+
+    // Wait before exiting loop to avoid wasted resources
+    wait(100, msec);
+  }
 }
 
 void autonomous(void) {
-  autonRoutineFn routines[] = 
-  { 
-    autonRoutine0,
-    autonRoutine1 
-  };
-
   routines[selectedAutonRoutine]();
 }
 
