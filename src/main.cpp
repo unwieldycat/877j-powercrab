@@ -37,16 +37,7 @@ autonRoutineFn routines[] =
   autonRoutine1 
 };
 
-/*
-  Routine 0: Sweep
-
-  Routine 0 starts by collecting all the rings
-  present on the current side of the field, and 
-  dumps it into the goal furthest from the 
-  starting point. This routine requires the robot 
-  to start on the left of the field, halfway in 
-  between the balance and the side wall.
-*/
+// Routine 0
 void autonRoutine0() {
   // Initialize
   Drivetrain.setHeading(0, deg);
@@ -67,13 +58,7 @@ void autonRoutine0() {
   */
 }
 
-/* 
-  Routine 1: Fetch
-
-  Routine 1 collects all the rings on the current
-  side of the field and places it on the bucket
-  next to the starting position of the robot
-*/
+// Routine 1
 void autonRoutine1() {
   // Initialize
   Drivetrain.setHeading(0, deg);
