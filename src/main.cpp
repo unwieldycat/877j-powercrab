@@ -26,9 +26,11 @@ int selectedAutonRoutine;
 
 // =========== Autonomous Routines =========== //
 
+// Type definition for routine function
 typedef void (*autonRoutineFn) (void);
 
-// Register all autonomous routines
+// Register all autonomous routines into a global for accessibility within
+// various functions
 autonRoutineFn routines[] = 
 { 
   autonRoutine0,
@@ -108,6 +110,7 @@ void pre_auton(void) {
     bool const LeftPressing = Controller1.ButtonLeft.pressing();
     bool const ButtonAPressing = Controller1.ButtonA.pressing();
 
+    // Work with user input
     if (
       RightPressing && 
       selectedAutonRoutine < (sizeof(routines)/sizeof(*routines))
@@ -136,6 +139,7 @@ void pre_auton(void) {
 }
 
 void autonomous(void) {
+  // Epic one liner which runs selected autonomous routine
   routines[selectedAutonRoutine]();
 }
 
@@ -150,10 +154,12 @@ void usercontrol(void) {
     // Reversed driving mode
     if (Controller1.ButtonY.pressing()) reversed = !reversed;
 
-    // Drive control
+    // Drive control section
     int const YPos = (reversed) ? -(Controller1.Axis3.position()) : Controller1.Axis3.position();
     int const XPos = (reversed) ? -(Controller1.Axis1.position()) : Controller1.Axis1.position(); 
 
+    // Foward-backward movement
+    // Check if control input is greater than 5 for deadzones
     if (YPos > 5 || YPos < -5) {
       Drivetrain.setDriveVelocity(abs(YPos), pct);
       if (YPos < 0) Drivetrain.drive(reverse);
@@ -163,6 +169,8 @@ void usercontrol(void) {
       Drivetrain.setDriveVelocity(0, pct);
     }
 
+    // left-right movement
+    // Check if control input is greater than 5 for deadzones
     if (XPos > 5 || XPos < -5) {
       Drivetrain.setTurnVelocity(abs(YPos), pct);
       if (YPos < 0) Drivetrain.turn(left);
@@ -176,21 +184,25 @@ void usercontrol(void) {
     bool const L2Pressing = Controller1.ButtonL2.pressing();
     bool const L1Pressing = Controller1.ButtonL2.pressing();
 
+    // Check if running without user input and stop
     if (!L2Pressing && !L1Pressing && forkliftActive) {
       forkliftMotor.stop(coast);
       forkliftActive = false;
     } 
 
+    // Listen for reverse input
     if (L2Pressing && !L1Pressing) {
       forkliftMotor.spin(reverse, 100, pct);
       forkliftActive = true;
     }
 
+    // Listen for foward input
     if (L1Pressing && !L2Pressing) {
       forkliftMotor.spin(forward, 100, pct);
       forkliftActive = true;
     }
 
+    // Wait before exiting loop to avoid wasted resources
     wait(20, msec);
   }
 }
