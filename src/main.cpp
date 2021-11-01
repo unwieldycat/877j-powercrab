@@ -82,10 +82,10 @@ void autonRoutine1() {
   Drivetrain.turnToHeading(270, deg, true);
   Drivetrain.driveFor(2100, mm, true);
   Drivetrain.turnToHeading(0, deg, true);
+  Drivetrain.driveFor(reverse, 450, mm, true);
 
   /*
     TODO:
-    > Drive up to goal
     > Use bucket
   */
 }
