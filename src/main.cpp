@@ -10,6 +10,7 @@
 // ---- END VEXCODE CONFIGURED DEVICES ----
 
 #include "vex.h"
+#include <sstream>
 
 using namespace vex;
 
@@ -121,10 +122,13 @@ void pre_auton(void) {
     Brain.Screen.drawRectangle(0, 0, 480, 32);
     Brain.Screen.printAt(240, 16, "-- SELECT AUTON ROUTINE --");
 
-    /*
-      TODO:
-      > Print selection to screen
-    */
+    // Convert selection to string
+    std::ostringstream stringified;
+    stringified << selectedAutonRoutine;
+    std::string const selection = stringified.str();
+
+    // Draw selection
+    Brain.Screen.printAt(240, 208, selection.c_str());
 
     // Wait before exiting loop to avoid wasted resources
     wait(100, msec);
