@@ -142,7 +142,7 @@ void usercontrol(void) {
   bool driving = false;
   bool turning = false;
 
-  while (1) {
+  while (true) {
     // Reversed driving mode
     if (Controller1.ButtonY.pressing()) reversed = !reversed;
 
