@@ -134,6 +134,7 @@ void usercontrol(void) {
   bool reversed = false;
   bool driving = false;
   bool turning = false;
+  bool turbo = false;
 
   while (true) {
     // Reversed driving mode
@@ -146,7 +147,7 @@ void usercontrol(void) {
     // Foward-backward movement
     // Check if control input is greater than 5 for deadzones
     if (YPos > 5 || YPos < -5) {
-      Drivetrain.setDriveVelocity(abs(YPos), pct);
+      Drivetrain.setDriveVelocity(abs((turbo) ? YPos : YPos / 2), pct);
       if (YPos < 0) Drivetrain.drive(reverse);
       if (YPos > 0) Drivetrain.drive(forward);
       driving = true;
