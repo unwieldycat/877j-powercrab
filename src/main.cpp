@@ -29,14 +29,6 @@ int selectedAutonRoutine;
 // Type definition for routine function
 typedef void (*autonRoutineFn) (void);
 
-// Register all autonomous routines into a global for accessibility within
-// various functions
-autonRoutineFn routines[] = 
-{ 
-  autonRoutine0,
-  autonRoutine1 
-};
-
 // Routine 0
 void autonRoutine0() {
   // Initialize
@@ -79,6 +71,14 @@ void autonRoutine1() {
 }
 
 // TODO: Create more routines
+
+// Register all autonomous routines into a global for accessibility within
+// various functions
+autonRoutineFn routines[] = 
+{ 
+  autonRoutine0,
+  autonRoutine1 
+};
 
 // ========= Main Competition Methods ========= //
 
