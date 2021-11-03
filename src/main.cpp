@@ -154,9 +154,18 @@ void usercontrol(void) {
   bool turning = false;
   bool turbo = false;
 
+  bool buttonYDebounce = false;
+
   while (true) {
     // Reversed driving mode
-    if (Controller1.ButtonY.pressing()) reversed = !reversed;
+    bool const buttonYPressing = Controller1.ButtonY.pressing();
+
+    if (buttonYPressing && !buttonYDebounce) {
+      buttonYDebounce = true;
+      reversed = !reversed;
+    }
+    
+    if (!buttonYPressing && buttonYDebounce) buttonYDebounce = false;
 
     // Drive control section
     int const YPos = (reversed) ? -(Controller1.Axis3.position()) : Controller1.Axis3.position();
