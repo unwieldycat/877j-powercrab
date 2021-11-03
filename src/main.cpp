@@ -88,39 +88,57 @@ void pre_auton(void) {
   // TODO: Initialize robot components
   // (e.g. retract arms, lower buckets, calibrate sensors)
 
+  bool iterationDebounce = false;
   bool selected = false;
   while (!selected) {
+
     // Read user input
     bool const RightPressing = Controller1.ButtonRight.pressing();
     bool const LeftPressing = Controller1.ButtonLeft.pressing();
     bool const ButtonAPressing = Controller1.ButtonA.pressing();
 
-    // Work with user input
     if (
-      RightPressing && 
-      selectedAutonRoutine < (sizeof(routines)/sizeof(*routines))
-    ) selectedAutonRoutine++;
+      LeftPressing &&
+      selectedAutonRoutine > 0 && 
+      !iterationDebounce
+    ) {
+      iterationDebounce = true;
+      selectedAutonRoutine--;
+    }
 
-    if (LeftPressing && selectedAutonRoutine > 0) selectedAutonRoutine--;
+    if (
+      RightPressing &&
+      !iterationDebounce &&
+      selectedAutonRoutine < 10
+    ) {
+      iterationDebounce = true;
+      selectedAutonRoutine++;
+    }
+    
+    if (!RightPressing && !LeftPressing) iterationDebounce = false;
 
     if (ButtonAPressing) selected = true;
 
-    // Draw topbar
-    Brain.Screen.setFillColor(270);
-    Brain.Screen.drawRectangle(0, 0, 480, 32);
-    Brain.Screen.printAt(240, 16, "-- SELECT AUTON ROUTINE --");
-
     // Convert selection to string
     std::ostringstream stringified;
-    stringified << selectedAutonRoutine;
-    std::string const selection = stringified.str();
+    stringified << "Selected routine: " << selectedAutonRoutine;
+    std::string const message = stringified.str();
 
     // Draw selection
-    Brain.Screen.printAt(240, 208, selection.c_str());
+    Brain.Screen.clearScreen();
+    Brain.Screen.setCursor(1, 1);
+    Brain.Screen.print(message.c_str());
 
     // Wait before exiting loop to avoid wasted resources
-    wait(100, msec);
+    wait(20, msec);
   }
+
+  // Print confirmation message
+  Brain.Screen.clearScreen();
+  Brain.Screen.setCursor(1, 1);
+  Brain.Screen.print("Selected routine, waiting for autonomous period");
+  Brain.Screen.setCursor(2, 1);
+  Brain.Screen.print("to begin...");
 }
 
 void autonomous(void) {
