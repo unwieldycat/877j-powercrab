@@ -7,6 +7,8 @@
 // forkliftMotor        motor         3               
 // Drivetrain           drivetrain    1, 2, 20        
 // Controller1          controller                    
+// liftMotor            motor         4               
+// bucketMotor          motor         5               
 // ---- END VEXCODE CONFIGURED DEVICES ----
 
 #include "vex.h"
@@ -78,6 +80,48 @@ autonRoutineFn routines[] =
 };
 
 // ============== Control Loops ============== //
+
+void bucketControlLoop() {
+  bool liftActive = false;
+  bool bucketOpen = false;
+
+  liftMotor.resetPosition();
+  while(Competition.isDriverControl()) {
+    bool const R2Pressing = Controller1.ButtonR2.pressing();
+    bool const R1Pressing = Controller1.ButtonR1.pressing();
+    bool const ButtonBPressing = Controller1.ButtonB.pressing();
+
+    // Check if button B is pressing when bucket is closed and open it
+    if (ButtonBPressing && !bucketOpen) {
+      bucketOpen = true;
+      liftMotor.rotateTo(90, deg);
+    }
+
+    // Check if button B is pressing when bucket is open and close it
+    if (ButtonBPressing && bucketOpen) {
+      bucketOpen = false;
+      liftMotor.rotateTo(0, deg);
+    }
+
+    // Check if running without user input and stop
+    if (!R2Pressing && !R1Pressing && liftActive) {
+      liftMotor.stop(coast);
+      liftActive = false;
+    } 
+
+    // Listen for reverse input
+    if (R2Pressing && !R1Pressing) {
+      liftMotor.spin(reverse, 100, pct);
+      liftActive = true;
+    }
+
+    // Listen for foward input
+    if (R1Pressing && !R2Pressing) {
+      liftMotor.spin(forward, 100, pct);
+      liftActive = true;
+    }
+  }
+}
 
 void forkliftControlLoop() {
   bool forkliftActive = false;
