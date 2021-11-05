@@ -296,6 +296,7 @@ void pre_auton(void) {
 }
 
 void autonomous(void) {
+  Brain.Screen.clearScreen();
   // Epic one liner which runs selected autonomous routine
   routines[selectedAutonRoutine]();
 }
