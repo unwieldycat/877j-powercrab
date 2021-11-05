@@ -123,17 +123,18 @@ void driveControlLoop() {
       driving = true;
     } else if (driving) {
       Drivetrain.setDriveVelocity(0, pct);
+      driving = false;
     }
 
     // left-right movement
     // Check if control input is greater than 5 for deadzones
     if (XPos > 5 || XPos < -5) {
-      Drivetrain.setTurnVelocity(abs(YPos), pct);
-      if (YPos < 0) Drivetrain.turn(left);
-      if (YPos > 0) Drivetrain.turn(right);
+      Drivetrain.setTurnVelocity(XPos, pct);
+      Drivetrain.turn(right);
       turning = true;
     } else if (turning) {
       Drivetrain.setTurnVelocity(0, pct);
+      turning = false;
     }
 
     vex::wait(20, msec);
@@ -156,7 +157,7 @@ void buttonListener() {
     // Listen for button X to be pressed
     if (buttonXPressing && !debounceX) {
       debounceX = true;
-      reversed = !reversed;
+      turbo = !turbo;
     } else if (!buttonXPressing && debounceX) debounceX = false;
   }
 }
