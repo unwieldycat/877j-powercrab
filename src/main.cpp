@@ -172,34 +172,60 @@ void pre_auton(void) {
 
   bool iterationDebounce = false;
   bool selected = false;
-  while (!selected && !Competition.isAutonomous() && !Competition.isDriverControl()) {
 
-    // Read user input
-    bool const RightPressing = Controller1.ButtonRight.pressing();
-    bool const LeftPressing = Controller1.ButtonLeft.pressing();
-    bool const ButtonAPressing = Controller1.ButtonA.pressing();
+  Brain.Screen.setFillColor(red);
+  Brain.Screen.drawRectangle(0, 190, 215, 50);
+  Brain.Screen.printAt(10, 215, "Sub");
+  Brain.Screen.setFillColor(green);
+  Brain.Screen.drawRectangle(215, 190, 430, 50);
+  Brain.Screen.printAt(225, 215, "Add");
+  Brain.Screen.setFillColor(blue);
+  Brain.Screen.drawRectangle(430, 190, 50, 50);
+  Brain.Screen.printAt(440, 215, "Go");
+  Brain.Screen.setFillColor(transparent);
 
-    if (
-      LeftPressing &&
-      selectedAutonRoutine > 0 && 
-      !iterationDebounce
-    ) {
-      iterationDebounce = true;
-      selectedAutonRoutine--;
+  while (!selected) {
+    int const xPos = Brain.Screen.xPosition();
+    int const yPos = Brain.Screen.yPosition();
+    bool const screenPressing = Brain.Screen.pressing();
+
+    if (screenPressing) {
+      if (
+        xPos > 0 && 
+        xPos < 215 &&
+        yPos > 190 &&
+        yPos < 240 &&
+        !iterationDebounce &&
+        selectedAutonRoutine > 0
+      ) {
+        selectedAutonRoutine--;
+        iterationDebounce = true;
+      }
+
+      if (
+        xPos > 215 && 
+        xPos < 430 &&
+        yPos > 190 &&
+        yPos < 240 &&
+        !iterationDebounce &&
+        selectedAutonRoutine < sizeof(routines)/sizeof(routines[0]) - 1
+      ) {
+        selectedAutonRoutine++;
+        iterationDebounce = true;
+      }
+
+      if (
+        xPos > 430 && 
+        xPos < 480 &&
+        yPos > 190 &&
+        yPos < 240
+      ) {
+        selected = true;
+      }
+
+    } else {
+      iterationDebounce = false;
     }
-
-    if (
-      RightPressing &&
-      !iterationDebounce &&
-      selectedAutonRoutine < 10
-    ) {
-      iterationDebounce = true;
-      selectedAutonRoutine++;
-    }
-    
-    if (!RightPressing && !LeftPressing) iterationDebounce = false;
-
-    if (ButtonAPressing) selected = true;
 
     // Convert selection to string
     std::ostringstream stringified;
@@ -207,7 +233,7 @@ void pre_auton(void) {
     std::string const message = stringified.str();
 
     // Draw selection
-    Brain.Screen.clearScreen();
+    Brain.Screen.clearLine(1);
     Brain.Screen.setCursor(1, 1);
     Brain.Screen.print(message.c_str());
 
