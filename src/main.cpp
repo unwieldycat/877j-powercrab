@@ -171,7 +171,7 @@ void pre_auton(void) {
 
   bool iterationDebounce = false;
   bool selected = false;
-  while (!selected) {
+  while (!selected && !Competition.isAutonomous() && !Competition.isDriverControl()) {
 
     // Read user input
     bool const RightPressing = Controller1.ButtonRight.pressing();
@@ -214,12 +214,14 @@ void pre_auton(void) {
     wait(20, msec);
   }
 
-  // Print confirmation message
-  Brain.Screen.clearScreen();
-  Brain.Screen.setCursor(1, 1);
-  Brain.Screen.print("Selected routine, waiting for autonomous period");
-  Brain.Screen.setCursor(2, 1);
-  Brain.Screen.print("to begin...");
+  // Print confirmation message if selected
+  if (selected) {
+    Brain.Screen.clearScreen();
+    Brain.Screen.setCursor(1, 1);
+    Brain.Screen.print("Selected routine, waiting for autonomous period");
+    Brain.Screen.setCursor(2, 1);
+    Brain.Screen.print("to begin...");
+  }
 }
 
 void autonomous(void) {
