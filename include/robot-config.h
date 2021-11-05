@@ -6,6 +6,8 @@ extern brain Brain;
 extern motor forkliftMotor;
 extern smartdrive Drivetrain;
 extern controller Controller1;
+extern motor liftMotor;
+extern motor bucketMotor;
 
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Pro.
