@@ -18,11 +18,8 @@ using namespace vex;
 
 competition Competition;
 int selectedAutonRoutine;
-
-// ============ Component Actions ============ //
-
-// TODO: Create actions for each component of the
-// robot (e.g. bucket, belt, arms)
+bool reversed = false;
+bool turbo = false;
 
 // =========== Autonomous Routines =========== //
 
@@ -79,6 +76,90 @@ autonRoutineFn routines[] =
   autonRoutine0,
   autonRoutine1 
 };
+
+// ============== Control Loops ============== //
+
+void forkliftControlLoop() {
+  bool forkliftActive = false;
+
+  while(Competition.isDriverControl()) {
+    bool const L2Pressing = Controller1.ButtonL2.pressing();
+    bool const L1Pressing = Controller1.ButtonL1.pressing();
+
+    // Check if running without user input and stop
+    if (!L2Pressing && !L1Pressing && forkliftActive) {
+      forkliftMotor.stop(coast);
+      forkliftActive = false;
+    } 
+
+    // Listen for reverse input
+    if (L2Pressing && !L1Pressing) {
+      forkliftMotor.spin(reverse, 100, pct);
+      forkliftActive = true;
+    }
+
+    // Listen for foward input
+    if (L1Pressing && !L2Pressing) {
+      forkliftMotor.spin(forward, 100, pct);
+      forkliftActive = true;
+    }
+  }
+}
+
+void driveControlLoop() {
+  bool driving = false;
+  bool turning = false;
+
+  while(Competition.isDriverControl()) {
+    int const YPos = (reversed) ? -(Controller1.Axis3.position()) : Controller1.Axis3.position();
+    int const XPos = (reversed) ? -(Controller1.Axis1.position()) : Controller1.Axis1.position(); 
+
+    // Foward-backward movement
+    // Check if control input is greater than 5 for deadzones
+    if (YPos > 5 || YPos < -5) {
+      Drivetrain.setDriveVelocity(abs((turbo) ? YPos : YPos / 2), pct);
+      if (YPos < 0) Drivetrain.drive(reverse);
+      if (YPos > 0) Drivetrain.drive(forward);
+      driving = true;
+    } else if (driving) {
+      Drivetrain.setDriveVelocity(0, pct);
+    }
+
+    // left-right movement
+    // Check if control input is greater than 5 for deadzones
+    if (XPos > 5 || XPos < -5) {
+      Drivetrain.setTurnVelocity(abs(YPos), pct);
+      if (YPos < 0) Drivetrain.turn(left);
+      if (YPos > 0) Drivetrain.turn(right);
+      turning = true;
+    } else if (turning) {
+      Drivetrain.setTurnVelocity(0, pct);
+    }
+
+    vex::wait(20, msec);
+  }
+}
+
+void buttonListener() {
+  bool debounceY = false;
+  bool debounceX = false;
+  while(Competition.isDriverControl()) {
+    bool const buttonYPressing = Controller1.ButtonY.pressing();
+    bool const buttonXPressing = Controller1.ButtonX.pressing();
+
+    // Listen for button Y to be pressed
+    if (buttonYPressing && !debounceY) {
+      debounceY = true;
+      reversed = !reversed;
+    } else if (!buttonYPressing && debounceY) debounceY = false;
+
+    // Listen for button X to be pressed
+    if (buttonXPressing && !debounceX) {
+      debounceX = true;
+      reversed = !reversed;
+    } else if (!buttonXPressing && debounceX) debounceX = false;
+  }
+}
 
 // ========= Main Competition Methods ========= //
 
@@ -147,77 +228,13 @@ void autonomous(void) {
 }
 
 void usercontrol(void) {
-  // Variables that need to be used between loops
-  bool forkliftActive = false;
-  bool reversed = false;
-  bool driving = false;
-  bool turning = false;
-  bool turbo = false;
+  thread driveLoop = thread(driveControlLoop);
+  thread forkLoop = thread(forkliftControlLoop);
+  thread btnListener = thread(buttonListener);
 
-  bool buttonYDebounce = false;
-
-  while (true) {
-    // Reversed driving mode
-    bool const buttonYPressing = Controller1.ButtonY.pressing();
-
-    if (buttonYPressing && !buttonYDebounce) {
-      buttonYDebounce = true;
-      reversed = !reversed;
-    }
-    
-    if (!buttonYPressing && buttonYDebounce) buttonYDebounce = false;
-
-    // Drive control section
-    int const YPos = (reversed) ? -(Controller1.Axis3.position()) : Controller1.Axis3.position();
-    int const XPos = (reversed) ? -(Controller1.Axis1.position()) : Controller1.Axis1.position(); 
-
-    // Foward-backward movement
-    // Check if control input is greater than 5 for deadzones
-    if (YPos > 5 || YPos < -5) {
-      Drivetrain.setDriveVelocity(abs((turbo) ? YPos : YPos / 2), pct);
-      if (YPos < 0) Drivetrain.drive(reverse);
-      if (YPos > 0) Drivetrain.drive(forward);
-      driving = true;
-    } else if (driving) {
-      Drivetrain.setDriveVelocity(0, pct);
-    }
-
-    // left-right movement
-    // Check if control input is greater than 5 for deadzones
-    if (XPos > 5 || XPos < -5) {
-      Drivetrain.setTurnVelocity(abs(YPos), pct);
-      if (YPos < 0) Drivetrain.turn(left);
-      if (YPos > 0) Drivetrain.turn(right);
-      turning = true;
-    } else if (turning) {
-      Drivetrain.setTurnVelocity(0, pct);
-    }
-
-    // Forklift control
-    bool const L2Pressing = Controller1.ButtonL2.pressing();
-    bool const L1Pressing = Controller1.ButtonL2.pressing();
-
-    // Check if running without user input and stop
-    if (!L2Pressing && !L1Pressing && forkliftActive) {
-      forkliftMotor.stop(coast);
-      forkliftActive = false;
-    } 
-
-    // Listen for reverse input
-    if (L2Pressing && !L1Pressing) {
-      forkliftMotor.spin(reverse, 100, pct);
-      forkliftActive = true;
-    }
-
-    // Listen for foward input
-    if (L1Pressing && !L2Pressing) {
-      forkliftMotor.spin(forward, 100, pct);
-      forkliftActive = true;
-    }
-
-    // Wait before exiting loop to avoid wasted resources
-    wait(20, msec);
-  }
+  btnListener.join();
+  forkLoop.join();
+  driveLoop.join();
 }
 
 // ================ Entrypoint ================ //
