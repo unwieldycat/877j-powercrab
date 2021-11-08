@@ -15,7 +15,7 @@ inertial DrivetrainInertial = inertial(PORT20);
 smartdrive Drivetrain = smartdrive(LeftDriveSmart, RightDriveSmart, DrivetrainInertial, 319.19, 320, 40, mm, 1);
 controller Controller1 = controller(primary);
 motor liftMotor = motor(PORT4, ratio36_1, false);
-motor bucketMotor = motor(PORT5, ratio18_1, false);
+motor intakeMotor = motor(PORT5, ratio18_1, false);
 
 // VEXcode generated functions
 // define variable for remote controller enable/disable

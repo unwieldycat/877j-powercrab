@@ -8,7 +8,7 @@
 // Drivetrain           drivetrain    1, 2, 20        
 // Controller1          controller                    
 // liftMotor            motor         4               
-// bucketMotor          motor         5               
+// intakeMotor          motor         5               
 // ---- END VEXCODE CONFIGURED DEVICES ----
 
 #include "vex.h"
