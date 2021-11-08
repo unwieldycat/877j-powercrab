@@ -31,6 +31,7 @@ typedef void (*autonRoutineFn) (void);
 // Routine 0
 void autonRoutine0() {
   // Initialize
+  Drivetrain.setHeading(0, deg);
   Drivetrain.setDriveVelocity(100, pct);
 
   // Actions
