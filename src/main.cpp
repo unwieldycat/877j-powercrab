@@ -31,13 +31,14 @@ typedef void (*autonRoutineFn) (void);
 // Routine 0
 void autonRoutine0() {
   // Initialize
-  Drivetrain.setHeading(0, deg);
+  Drivetrain.setDriveVelocity(100, pct);
 
   // Actions
-  Drivetrain.driveFor(900, mm, true);
+  Drivetrain.driveFor(950, mm, true);
   Drivetrain.turnToHeading(90, deg, true);
-  Drivetrain.driveFor(2150, mm, true);
+  Drivetrain.driveFor(2250, mm, true);
   Drivetrain.turnToHeading(315, deg, true);
+  Drivetrain.driveFor(-300, mm, true);
 
   /*
     TODO:
