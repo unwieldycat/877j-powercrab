@@ -206,6 +206,58 @@ void buttonListener() {
   }
 }
 
+void driveUI() {
+  while(true) {
+    // Game mode
+    bool isAuton = Competition.isAutonomous();
+    bool isDrive = Competition.isDriverControl();
+    Brain.Screen.clearLine(1);
+    
+    if (isAuton) {
+      std::ostringstream routineStr;
+      routineStr << "(ROUTINE " << selectedAutonRoutine << ")";
+      Brain.Screen.setCursor(1, 1);
+      Brain.Screen.setFillColor(orange);
+      Brain.Screen.print(("AUTON MODE" + routineStr.str()).c_str());
+      Brain.Screen.setFillColor(transparent);
+    }
+
+    if (isDrive) {
+      Brain.Screen.setCursor(1, 1);
+      Brain.Screen.setFillColor(blue);
+      Brain.Screen.print("DRIVE MODE");
+      Brain.Screen.setFillColor(transparent);
+    }
+
+    // Turbo status
+    Brain.Screen.clearLine(2);
+    Brain.Screen.setCursor(2, 1);
+
+    (turbo)
+    ? Brain.Screen.print("Turbo: On")
+    : Brain.Screen.print("Turbo: Off");
+
+    // Reverse status
+    Brain.Screen.clearLine(3);
+    Brain.Screen.setCursor(3, 1);
+
+    (reversed)
+    ? Brain.Screen.print("Reverse: On")
+    : Brain.Screen.print("Reverse: Off");
+
+    // Heading
+    double const compassHeading = Drivetrain.heading(deg);
+    std::ostringstream headingStr;
+    headingStr << "Heading: " << round(compassHeading);
+
+    Brain.Screen.clearLine(4);
+    Brain.Screen.setCursor(4, 1);
+    Brain.Screen.print(headingStr.str().c_str());
+
+    wait(1, sec);
+  }
+}
+
 // ========= Main Competition Methods ========= //
 
 void pre_auton(void) {
@@ -286,18 +338,11 @@ void pre_auton(void) {
   }
 
   // Print confirmation message if selected
-  if (selected) {
-    Brain.Screen.clearScreen();
-    Brain.Screen.setCursor(1, 1);
-    Brain.Screen.print("Selected routine, waiting for autonomous period");
-    Brain.Screen.setCursor(2, 1);
-    Brain.Screen.print("to begin...");
-  }
+  Brain.Screen.clearScreen();
+  driveUI();
 }
 
 void autonomous(void) {
-  Brain.Screen.clearScreen();
-  // Epic one liner which runs selected autonomous routine
   routines[selectedAutonRoutine]();
 }
 
