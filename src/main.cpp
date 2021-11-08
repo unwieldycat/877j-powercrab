@@ -282,7 +282,7 @@ void pre_auton(void) {
   Brain.Screen.printAt(440, 215, "Go");
   Brain.Screen.setFillColor(transparent);
 
-  while (!selected) {
+  while (!selected && !Competition.isEnabled()) {
     int const xPos = Brain.Screen.xPosition();
     int const yPos = Brain.Screen.yPosition();
     bool const screenPressing = Brain.Screen.pressing();
