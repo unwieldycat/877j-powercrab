@@ -83,27 +83,34 @@ autonRoutineFn routines[] =
 
 // ============== Control Loops ============== //
 
-void bucketControlLoop() {
+void liftControlLoop() {
   bool liftActive = false;
-  bool bucketOpen = false;
+  bool intakeActive = false;
 
   liftMotor.resetPosition();
   while(Competition.isDriverControl()) {
     bool const R2Pressing = Controller1.ButtonR2.pressing();
     bool const R1Pressing = Controller1.ButtonR1.pressing();
-    bool const ButtonBPressing = Controller1.ButtonB.pressing();
+    bool const UpPressing = Controller1.ButtonUp.pressing();
+    bool const DownPressing = Controller1.ButtonDown.pressing();
 
     // Check if button B is pressing when bucket is closed and open it
-    if (ButtonBPressing && !bucketOpen) {
-      bucketOpen = true;
-      liftMotor.rotateTo(90, deg);
+    if (UpPressing && !DownPressing) {
+      intakeActive = true;
+      intakeMotor.spin(forward);
     }
 
     // Check if button B is pressing when bucket is open and close it
-    if (ButtonBPressing && bucketOpen) {
-      bucketOpen = false;
-      liftMotor.rotateTo(0, deg);
+    if (DownPressing && !UpPressing) {
+      intakeActive = true;
+      intakeMotor.spin(reverse);
     }
+
+    // Turn off intake if no input
+    if (!UpPressing && !DownPressing && intakeActive) {
+      intakeActive = false;
+      intakeMotor.stop();
+    } 
 
     // Check if running without user input and stop
     if (!R2Pressing && !R1Pressing && liftActive) {
