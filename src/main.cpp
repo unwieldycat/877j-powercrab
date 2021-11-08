@@ -38,7 +38,8 @@ void autonRoutine0() {
   Drivetrain.turnToHeading(90, deg, true);
   Drivetrain.driveFor(2250, mm, true);
   Drivetrain.turnToHeading(315, deg, true);
-  Drivetrain.driveFor(-300, mm, true);
+  Drivetrain.setDriveVelocity(25, pct);
+  Drivetrain.driveFor(-150, mm, true);
 
   /*
     TODO:
