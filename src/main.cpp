@@ -42,9 +42,9 @@ void autonRoutine0() {
   Drivetrain.turnToHeading(315, deg, true);
   Drivetrain.setDriveVelocity(25, pct);
 
-  // Go foward until limit switch pressed
+  // Go backward until limit switch pressed
   while(!LimitSwitchA.pressing()) {
-    Drivetrain.drive(forward);
+    Drivetrain.drive(reverse);
     wait(25, msec);
   }
 
@@ -75,9 +75,9 @@ void autonRoutine1() {
   Drivetrain.setDriveVelocity(50, pct);
   Drivetrain.turnToHeading(0, deg, true);
 
-  // Go foward until limit switch pressed
+  // Go backward until limit switch pressed
   while(!LimitSwitchA.pressing()) {
-    Drivetrain.drive(forward);
+    Drivetrain.drive(reverse);
     wait(25, msec);
   }
   
