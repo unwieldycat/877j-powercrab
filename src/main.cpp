@@ -287,14 +287,7 @@ void driveUI() {
   }
 }
 
-// ========= Main Competition Methods ========= //
-
-void pre_auton(void) {
-  vexcodeInit();
-
-  // TODO: Initialize robot components
-  // (e.g. retract arms, lower buckets, calibrate sensors)
-
+void selectionUI() {
   bool iterationDebounce = false;
   bool selected = false;
 
@@ -368,6 +361,17 @@ void pre_auton(void) {
 
   // Print confirmation message if selected
   Brain.Screen.clearScreen();
+}
+
+// ========= Main Competition Methods ========= //
+
+void pre_auton(void) {
+  vexcodeInit();
+
+  // TODO: Initialize robot components
+  // (e.g. retract arms, lower buckets, calibrate sensors)
+
+  selectionUI();
   driveUI();
 }
 
