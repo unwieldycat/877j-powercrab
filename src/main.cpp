@@ -9,6 +9,7 @@
 // Controller1          controller                    
 // liftMotor            motor         4               
 // intakeMotor          motor         5               
+// LimitSwitchA         limit         A               
 // ---- END VEXCODE CONFIGURED DEVICES ----
 
 #include "vex.h"
@@ -56,6 +57,7 @@ void autonRoutine0() {
 void autonRoutine1() {
   // Initialize
   Drivetrain.setHeading(0, deg);
+  Drivetrain.setDriveVelocity(100, pct);
 
   // Collect rings and drive
   intakeMotor.spin(forward);
@@ -64,8 +66,16 @@ void autonRoutine1() {
   Drivetrain.driveFor(2100, mm, true);
   Drivetrain.turnToHeading(270, deg, true);
   Drivetrain.driveFor(2050, mm, true);
+  Drivetrain.setDriveVelocity(50, pct);
   Drivetrain.turnToHeading(0, deg, true);
-  Drivetrain.driveFor(reverse, 450, mm, true);
+
+  // Go foward until limit switch pressed
+  while(!LimitSwitchA.pressing()) {
+    Drivetrain.drive(forward);
+    wait(25, msec);
+  }
+  
+  Drivetrain.stop(coast);
 
   // Drop rings in bucket
   liftMotor.setPosition(0, deg);
