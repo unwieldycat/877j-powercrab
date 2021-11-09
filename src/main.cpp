@@ -108,7 +108,6 @@ void liftControlLoop() {
   bool liftActive = false;
   bool intakeActive = false;
 
-  liftMotor.resetPosition();
   while(Competition.isDriverControl()) {
     bool const R2Pressing = Controller1.ButtonR2.pressing();
     bool const R1Pressing = Controller1.ButtonR1.pressing();
