@@ -367,10 +367,6 @@ void selectionUI() {
 
 void pre_auton(void) {
   vexcodeInit();
-
-  // TODO: Initialize robot components
-  // (e.g. retract arms, lower buckets, calibrate sensors)
-
   selectionUI();
   driveUI();
 }
