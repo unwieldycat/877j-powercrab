@@ -41,16 +41,22 @@ void autonRoutine0() {
   Drivetrain.driveFor(2250, mm, true);
   Drivetrain.turnToHeading(315, deg, true);
   Drivetrain.setDriveVelocity(25, pct);
-  Drivetrain.driveFor(-150, mm, true);
 
-  /*
-    TODO:
-    > Move to bucket
-    > Use bucket
-    > Move back from goal
-    > Turn 180 degrees
-    > Pick up goal
-  */
+  // Go foward until limit switch pressed
+  while(!LimitSwitchA.pressing()) {
+    Drivetrain.drive(forward);
+    wait(25, msec);
+  }
+
+  Drivetrain.stop(coast);
+
+  // Drop rings in bucket
+  liftMotor.setPosition(0, deg);
+  liftMotor.spinToPosition(180, deg);
+  intakeMotor.spin(reverse);
+  wait(1, sec);
+  intakeMotor.stop(coast);
+  liftMotor.spinToPosition(0, deg, true);
 }
 
 // Routine 1
