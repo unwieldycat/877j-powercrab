@@ -57,19 +57,23 @@ void autonRoutine1() {
   // Initialize
   Drivetrain.setHeading(0, deg);
 
-  // Actions
-  Drivetrain.driveFor(900, mm, true);
+  // Collect rings and drive
+  intakeMotor.spin(forward);
+  Drivetrain.driveFor(950, mm, true);
   Drivetrain.turnToHeading(90, deg, true);
   Drivetrain.driveFor(2100, mm, true);
   Drivetrain.turnToHeading(270, deg, true);
-  Drivetrain.driveFor(2100, mm, true);
+  Drivetrain.driveFor(2050, mm, true);
   Drivetrain.turnToHeading(0, deg, true);
   Drivetrain.driveFor(reverse, 450, mm, true);
 
-  /*
-    TODO:
-    > Use bucket
-  */
+  // Drop rings in bucket
+  liftMotor.setPosition(0, deg);
+  liftMotor.spinToPosition(180, deg);
+  intakeMotor.spin(reverse);
+  wait(1, sec);
+  intakeMotor.stop(coast);
+  liftMotor.spinToPosition(0, deg, true);
 }
 
 // TODO: Create more routines
