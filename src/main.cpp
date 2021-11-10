@@ -379,9 +379,11 @@ void usercontrol(void) {
   thread driveLoop = thread(driveControlLoop);
   thread forkLoop = thread(forkliftControlLoop);
   thread btnListener = thread(buttonListener);
+  thread liftLoop = thread(liftControlLoop);
 
   btnListener.join();
   forkLoop.join();
+  liftLoop.join();
   driveLoop.join();
 }
 
