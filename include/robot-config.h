@@ -8,7 +8,6 @@ extern smartdrive Drivetrain;
 extern controller Controller1;
 extern motor liftMotor;
 extern motor intakeMotor;
-extern limit LimitSwitchA;
 
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Pro.
