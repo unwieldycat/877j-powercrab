@@ -155,7 +155,7 @@ void forkliftControlLoop() {
     bool const L1Pressing = Controller1.ButtonL1.pressing();
 
     // Check if running without user input and stop
-    if (!L2Pressing && !L1Pressing && forkliftActive) {
+    if ((!L2Pressing && !L1Pressing) || LimitSwitchA.pressing() && forkliftActive) {
       forkliftMotor.stop(coast);
       forkliftActive = false;
     } 
