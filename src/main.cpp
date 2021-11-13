@@ -10,6 +10,7 @@
 // liftMotor            motor         4               
 // intakeMotor          motor         5               
 // LimitSwitchA         limit         A               
+// brakeMotor           motor         11              
 // ---- END VEXCODE CONFIGURED DEVICES ----
 
 #include "vex.h"
@@ -149,25 +150,42 @@ void liftControlLoop() {
 
 void forkliftControlLoop() {
   bool forkliftActive = false;
+  bool forkliftBraking = false;
 
   while(Competition.isDriverControl()) {
     bool const L2Pressing = Controller1.ButtonL2.pressing();
     bool const L1Pressing = Controller1.ButtonL1.pressing();
 
     // Check if running without user input and stop
-    if ((!L2Pressing && !L1Pressing) || LimitSwitchA.pressing() && forkliftActive) {
-      forkliftMotor.stop(coast);
+    if ((!L2Pressing && !L1Pressing) && forkliftActive) {
       forkliftActive = false;
-    } 
+      forkliftBraking = true;
+      forkliftMotor.stop(coast);
+      brakeMotor.spin(forward);
+      wait(500, msec);
+      brakeMotor.stop();
+    }
 
     // Listen for reverse input
     if (L2Pressing && !L1Pressing && !LimitSwitchA.pressing()) {
+      if (forkliftBraking) {
+        forkliftBraking = false;
+        brakeMotor.spin(reverse);
+        wait(500, msec);
+        brakeMotor.stop();
+      }
       forkliftMotor.spin(reverse, 100, pct);
       forkliftActive = true;
     }
 
     // Listen for foward input
     if (L1Pressing && !L2Pressing) {
+      if (forkliftBraking) {
+        forkliftBraking = false;
+        brakeMotor.spin(reverse);
+        wait(500, msec);
+        brakeMotor.stop();
+      }
       forkliftMotor.spin(forward, 100, pct);
       forkliftActive = true;
     }

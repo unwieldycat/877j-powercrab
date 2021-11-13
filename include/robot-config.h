@@ -9,6 +9,7 @@ extern controller Controller1;
 extern motor liftMotor;
 extern motor intakeMotor;
 extern limit LimitSwitchA;
+extern motor brakeMotor;
 
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Pro.
