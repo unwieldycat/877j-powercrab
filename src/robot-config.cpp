@@ -17,7 +17,7 @@ controller Controller1 = controller(primary);
 motor liftMotor = motor(PORT4, ratio36_1, false);
 motor intakeMotor = motor(PORT5, ratio18_1, false);
 limit LimitSwitchA = limit(Brain.ThreeWirePort.A);
-motor forkliftMotor2 = motor(PORT6, ratio36_1, true);
+motor forkliftMotor2 = motor(PORT11, ratio36_1, true);
 
 // VEXcode generated functions
 // define variable for remote controller enable/disable
