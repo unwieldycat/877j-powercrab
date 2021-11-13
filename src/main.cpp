@@ -79,6 +79,30 @@ void autonRoutine1() {
   liftMotor.spinToPosition(0, deg, true); // Retract lift
 }
 
+// Routine 2
+void autonRoutine2() {
+  // Initialize
+  Drivetrain.setHeading(0, deg); // Make starting direction north
+  Drivetrain.setDriveVelocity(100, pct); // Set drive velocity to 100%
+  intakeMotor.spin(forward); // Activate intake motor
+
+  // Collect rings and drive
+  Drivetrain.driveFor(950, mm, true); // Drive 950mm
+  Drivetrain.turnToHeading(270, deg, true); // Turn 90 degrees to the left
+  Drivetrain.driveFor(2250, mm, true); // Drive 2100mm to collect rings
+  Drivetrain.setDriveVelocity(50, pct); // Set velocity to 50%
+  Drivetrain.turnToHeading(0, deg, true); // Turn back to heading 0
+  Drivetrain.driveFor(-300, mm, true); // Drive backwards to go near goal
+
+  // Drop rings in bucket
+  liftMotor.setPosition(0, deg); // Make lift motor original position 0
+  liftMotor.spinToPosition(180, deg); // Spin lift motor to 180 degrees
+  intakeMotor.spin(reverse); // Activate intake motor to dump rings
+  wait(1, sec); // Wait one second
+  intakeMotor.stop(coast); // Stop intake motor
+  liftMotor.spinToPosition(0, deg, true); // Retract lift
+}
+
 // TODO: Create more routines
 
 // Register all autonomous routines into a global for accessibility within
@@ -86,7 +110,8 @@ void autonRoutine1() {
 autonRoutineFn routines[] = 
 { 
   autonRoutine0,
-  autonRoutine1 
+  autonRoutine1,
+  autonRoutine2
 };
 
 // ============== Control Loops ============== //
