@@ -283,9 +283,15 @@ void driveUI() {
     Brain.Screen.clearLine(3);
     Brain.Screen.setCursor(3, 1);
 
-    (reversed)
-    ? Brain.Screen.print("Reverse: On")
-    : Brain.Screen.print("Reverse: Off");
+    if (reversed) {
+      Brain.Screen.setFillColor(green);
+      Brain.Screen.print("Reverse: On");
+    } else {
+      Brain.Screen.setFillColor(red);
+      Brain.Screen.print("Reverse: Off");
+    }
+
+    Brain.Screen.setFillColor(transparent);
 
     // Heading
     double const compassHeading = Drivetrain.heading(deg);
