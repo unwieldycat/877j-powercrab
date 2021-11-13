@@ -8,7 +8,7 @@ using code = vision::code;
 brain  Brain;
 
 // VEXcode device constructors
-motor forkliftMotor = motor(PORT3, ratio18_1, false);
+motor forkliftMotor1 = motor(PORT3, ratio18_1, false);
 motor LeftDriveSmart = motor(PORT1, ratio18_1, false);
 motor RightDriveSmart = motor(PORT2, ratio18_1, true);
 inertial DrivetrainInertial = inertial(PORT20);
@@ -17,6 +17,7 @@ controller Controller1 = controller(primary);
 motor liftMotor = motor(PORT4, ratio36_1, false);
 motor intakeMotor = motor(PORT5, ratio18_1, false);
 limit LimitSwitchA = limit(Brain.ThreeWirePort.A);
+motor forkliftMotor2 = motor(PORT6, ratio36_1, true);
 
 // VEXcode generated functions
 // define variable for remote controller enable/disable

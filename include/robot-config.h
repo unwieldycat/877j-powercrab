@@ -3,12 +3,13 @@ using namespace vex;
 extern brain Brain;
 
 // VEXcode devices
-extern motor forkliftMotor;
+extern motor forkliftMotor1;
 extern smartdrive Drivetrain;
 extern controller Controller1;
 extern motor liftMotor;
 extern motor intakeMotor;
 extern limit LimitSwitchA;
+extern motor forkliftMotor2;
 
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Pro.
