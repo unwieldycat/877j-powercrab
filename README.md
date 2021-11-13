@@ -12,6 +12,7 @@ be tampered with.
 |----------|---------------|-----------------------------------------------------------------------------------|
 | 0        | Left          | Gets rings and dumps into the goal furthest from the starting point               |
 | 1        | Left          | Gets rings and places it on the bucket next to the starting position of the robot |
+| 2        | Right         | Gets rings and dumps into the goal near see-saw                                   |
 
 ## Controls
 
