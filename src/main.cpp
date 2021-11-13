@@ -183,11 +183,13 @@ void forkliftControlLoop() {
     // Check if running without user input and stop
     if ((!L2Pressing && !L1Pressing) && forkliftActive) {
       forkliftActive = false;
+      forkliftMotor1.stop(coast);
       forkliftMotor2.stop(coast);
     }
 
     // Listen for reverse input
     if (L2Pressing && !L1Pressing && !LimitSwitchA.pressing()) {
+      forkliftMotor1.spin(reverse, 100, pct);
       forkliftMotor2.spin(reverse, 100, pct);
       forkliftActive = true;
     }
