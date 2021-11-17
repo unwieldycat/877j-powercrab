@@ -5,12 +5,12 @@
 // Robot Configuration:
 // [Name]               [Type]        [Port(s)]
 // forkliftMotor1       motor         3               
-// Drivetrain           drivetrain    1, 2, 20        
 // Controller1          controller                    
 // liftMotor            motor         4               
 // intakeMotor          motor         5               
 // LimitSwitchA         limit         A               
 // forkliftMotor2       motor         11              
+// Drivetrain           drivetrain    1, 6, 2, 7, 20  
 // ---- END VEXCODE CONFIGURED DEVICES ----
 
 #include "vex.h"
