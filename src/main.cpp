@@ -32,6 +32,22 @@ typedef void (*autonRoutineFn) (void);
 
 // Routine 0
 void autonRoutine0() {
+  liftMotor.spin(reverse);
+  wait(1250, msec);
+  Drivetrain.driveFor(10, mm, true);
+  intakeMotor.spin(forward);
+}
+
+// Routine 1
+void autonRoutine1() {
+  liftMotor.spin(reverse);
+  wait(1250, msec);
+  Drivetrain.driveFor(25, mm, true);
+  intakeMotor.spin(forward);
+}
+
+// Routine 2
+void autonRoutine2() {
   // Initialize
   Drivetrain.setHeading(0, deg); // Make starting direction north
   Drivetrain.setDriveVelocity(100, pct); // Set drive velocity to 100%
@@ -54,8 +70,8 @@ void autonRoutine0() {
   liftMotor.spinToPosition(0, deg, true); // Retract lift
 }
 
-// Routine 1
-void autonRoutine1() {
+// Routine 3
+void autonRoutine3() {
   // Initialize
   Drivetrain.setHeading(0, deg); // Make starting direction north
   Drivetrain.setDriveVelocity(100, pct); // Set drive velocity to 100%
@@ -80,8 +96,8 @@ void autonRoutine1() {
   liftMotor.spinToPosition(0, deg, true); // Retract lift
 }
 
-// Routine 2
-void autonRoutine2() {
+// Routine 4
+void autonRoutine4() {
   // Initialize
   Drivetrain.setHeading(0, deg); // Make starting direction north
   Drivetrain.setDriveVelocity(100, pct); // Set drive velocity to 100%
@@ -110,9 +126,9 @@ void autonRoutine2() {
 // various functions
 autonRoutineFn routines[] = 
 { 
-  autonRoutine0,
-  autonRoutine1,
-  autonRoutine2
+  autonRoutine2,
+  autonRoutine3,
+  autonRoutine4
 };
 
 // ============== Control Loops ============== //

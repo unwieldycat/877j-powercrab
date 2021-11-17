@@ -10,9 +10,11 @@ be tampered with.
 
 | Routine  | Starting Pos. | Description                                                                       |
 |----------|---------------|-----------------------------------------------------------------------------------|
-| 0        | Left          | Gets rings and dumps into the goal furthest from the starting point               |
-| 1        | Left          | Gets rings and places it on the bucket next to the starting position of the robot |
-| 2        | Right         | Gets rings and dumps into the goal near see-saw                                   |
+| 0        | Left          | Dump preload rings in alliance bucket next to spawn on left                       |
+| 1        | Right         | Dump preload rings in alliance bucket by spawn on right                           |
+| 2        | Left          | Gets rings and dumps into the goal furthest from the starting point               |
+| 3        | Left          | Gets rings and places it on the bucket next to the starting position of the robot |
+| 4        | Right         | Gets rings and dumps into the goal near see-saw                                   |
 
 ## Controls
 
