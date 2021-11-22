@@ -33,17 +33,17 @@ typedef void (*autonRoutineFn) (void);
 // Routine 0
 void autonRoutine0() {
   liftMotor.spin(reverse);
-  wait(1250, msec);
-  Drivetrain.driveFor(10, mm, true);
-  intakeMotor.spin(forward);
+  wait(5, sec);
+  Drivetrain.driveFor(-250, mm, true);
+  intakeMotor.spin(reverse);
 }
 
 // Routine 1
 void autonRoutine1() {
   liftMotor.spin(reverse);
-  wait(1250, msec);
-  Drivetrain.driveFor(25, mm, true);
-  intakeMotor.spin(forward);
+  wait(5, sec);
+  Drivetrain.driveFor(-500, mm, true);
+  intakeMotor.spin(reverse);
 }
 
 // Routine 2
@@ -126,6 +126,8 @@ void autonRoutine4() {
 // various functions
 autonRoutineFn routines[] = 
 { 
+  autonRoutine0,
+  autonRoutine1,
   autonRoutine2,
   autonRoutine3,
   autonRoutine4
