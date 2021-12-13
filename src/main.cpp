@@ -15,6 +15,7 @@
 
 #include "vex.h"
 #include <sstream>
+#include <map>
 
 using namespace vex;
 
@@ -28,31 +29,10 @@ bool turbo = false;
 // =========== Autonomous Routines =========== //
 
 // Type definition for routine function
-typedef void (*autonRoutineFn) (void);
+typedef std::function<void> routineFn;
 
-// Routine 0
-void autonRoutine0() {
-  liftMotor.spin(reverse);
-  wait(5, sec);
-  Drivetrain.driveFor(-250, mm, true);
-  intakeMotor.spin(reverse);
-}
-
-// Routine 1
-void autonRoutine1() {
-  liftMotor.spin(reverse);
-  wait(5, sec);
-  Drivetrain.driveFor(-500, mm, true);
-  intakeMotor.spin(reverse);
-}
-
-// Register all autonomous routines into a global for accessibility within
-// various functions
-autonRoutineFn routines[] = 
-{ 
-  autonRoutine0,
-  autonRoutine1
-};
+// Map of routines
+std::map<int, routineFn> routines;
 
 // ============== Control Loops ============== //
 
@@ -257,79 +237,7 @@ void driveUI() {
 }
 
 void selectionUI() {
-  bool iterationDebounce = false;
-  bool selected = false;
-
-  Brain.Screen.setFillColor(red);
-  Brain.Screen.drawRectangle(0, 190, 215, 50);
-  Brain.Screen.printAt(10, 215, "Sub");
-  Brain.Screen.setFillColor(green);
-  Brain.Screen.drawRectangle(215, 190, 430, 50);
-  Brain.Screen.printAt(225, 215, "Add");
-  Brain.Screen.setFillColor(blue);
-  Brain.Screen.drawRectangle(430, 190, 50, 50);
-  Brain.Screen.printAt(440, 215, "Go");
-  Brain.Screen.setFillColor(transparent);
-
-  while (!selected && !Competition.isEnabled()) {
-    int const xPos = Brain.Screen.xPosition();
-    int const yPos = Brain.Screen.yPosition();
-    bool const screenPressing = Brain.Screen.pressing();
-
-    if (screenPressing) {
-      if (
-        xPos > 0 && 
-        xPos < 215 &&
-        yPos > 190 &&
-        yPos < 240 &&
-        !iterationDebounce &&
-        selectedAutonRoutine > 0
-      ) {
-        selectedAutonRoutine--;
-        iterationDebounce = true;
-      }
-
-      if (
-        xPos > 215 && 
-        xPos < 430 &&
-        yPos > 190 &&
-        yPos < 240 &&
-        !iterationDebounce &&
-        selectedAutonRoutine < sizeof(routines)/sizeof(routines[0]) - 1
-      ) {
-        selectedAutonRoutine++;
-        iterationDebounce = true;
-      }
-
-      if (
-        xPos > 430 && 
-        xPos < 480 &&
-        yPos > 190 &&
-        yPos < 240
-      ) {
-        selected = true;
-      }
-
-    } else {
-      iterationDebounce = false;
-    }
-
-    // Convert selection to string
-    std::ostringstream stringified;
-    stringified << "Selected routine: " << selectedAutonRoutine;
-    std::string const message = stringified.str();
-
-    // Draw selection
-    Brain.Screen.clearLine(1);
-    Brain.Screen.setCursor(1, 1);
-    Brain.Screen.print(message.c_str());
-
-    // Wait before exiting loop to avoid wasted resources
-    wait(20, msec);
-  }
-
-  // Print confirmation message if selected
-  Brain.Screen.clearScreen();
+  // TODO: New selection
 }
 
 // ========= Main Competition Methods ========= //
@@ -341,7 +249,24 @@ void pre_auton(void) {
 }
 
 void autonomous(void) {
-  routines[selectedAutonRoutine]();
+  // Register autonomous routines
+  routines.emplace(0, [&] () -> void {
+    liftMotor.spinFor(360, deg, true);
+    Drivetrain.driveFor(10, distanceUnits::cm, true);
+    intakeMotor.spin(forward);
+  });
+
+  routines.emplace(1, [&] () -> void {
+    forkliftMotor1.spinFor(forward, 360, deg, false);
+    forkliftMotor2.spinFor(forward, 360, deg, false);
+    Drivetrain.driveFor(75, distanceUnits::cm, true);
+    Drivetrain.driveFor(-75, distanceUnits::cm, true);
+    forkliftMotor1.spinFor(reverse, 360, deg, false);
+    forkliftMotor2.spinFor(reverse, 360, deg, false);
+  });
+
+  // Run selected routine
+  routines.find(selectedAutonRoutine)->second();
 }
 
 void usercontrol(void) {
@@ -368,6 +293,6 @@ int main() {
 
   // Prevent main from exiting with an infinite loop.
   while (true) {
-    wait(100, msec);
+    vex::wait(100, msec);
   }
 }
