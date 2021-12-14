@@ -14,6 +14,7 @@
 // ---- END VEXCODE CONFIGURED DEVICES ----
 
 #include "vex.h"
+#include "ui.h"
 #include <sstream>
 #include <map>
 
@@ -237,7 +238,32 @@ void driveUI() {
 }
 
 void selectionUI() {
-  // TODO: New selection
+  Brain.Screen.printAt(10, 10, "Select field position");
+
+  ui::Button leftButton = ui::Button(ui::Shape::Rect, 0, 240, 240, 100);
+  leftButton.setColor(color(255, 0, 0));
+  leftButton.setAnchorPoint(0, 1);
+  leftButton.draw();
+
+  ui::Button rightButton = ui::Button(ui::Shape::Rect, 480, 240, 240, 100);
+  rightButton.setColor(color(255, 0, 0));
+  rightButton.setAnchorPoint(1, 1);
+  rightButton.draw();
+
+  bool selected = false;
+
+  while(!selected) {
+    if (leftButton.pressing()) {
+      // TODO: Set some value to indicate pressed
+      selected = true;
+    }
+
+    if (rightButton.pressing()) {
+      // TODO: Set some value to indicate pressed
+      selected = true;
+    }
+  }
+
 }
 
 // ========= Main Competition Methods ========= //
