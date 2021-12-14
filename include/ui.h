@@ -4,7 +4,7 @@
 #include "vex.h"
 
 namespace ui {
-    enum Shape;
+    enum Shape { Rect, Circle };
 
     class Button {
         public:
