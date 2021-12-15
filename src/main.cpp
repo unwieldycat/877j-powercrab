@@ -318,7 +318,7 @@ void selectionUI() {
   Brain.Screen.print("Select field position");
 
   ui::Button leftButton = ui::Button(ui::Shape::Rect, 0, 240, 240, 100);
-  leftButton.setColor(color(255, 0, 0));
+  leftButton.setColor(color(0, 0, 255));
   leftButton.setAnchorPoint(0, 1);
   leftButton.draw();
 
