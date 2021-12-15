@@ -36,31 +36,27 @@ namespace ui {
             int shape;
             int xPos, yPos;
             int width, height;
-            int anchorX, anchorY;
             vex::color color;
             vex::color outline;
 
         public:
-            Button(Shape s, int x, int y, int w, int h) {
+            Button(Shape s, int x, int y, int w, int h, double ax = 0, double ay = 0) {
                 shape = s;
-                xPos = x, yPos = y;
+                xPos = x - (w * ax);
+                yPos = y - (h * ay);
                 width = w, height = h;
             }
 
             bool pressing() {
                 if (
                     Brain.Screen.pressing() &&
-                    Brain.Screen.xPosition() >= xPos + (width * anchorX) &&
-                    Brain.Screen.xPosition() < xPos + (width * anchorX) + width &&
-                    Brain.Screen.yPosition() >= yPos + (height * anchorY) &&
-                    Brain.Screen.yPosition() < yPos + (height * anchorY) + height
+                    Brain.Screen.xPosition() >= xPos &&
+                    Brain.Screen.xPosition() < xPos + width &&
+                    Brain.Screen.yPosition() >= yPos &&
+                    Brain.Screen.yPosition() < yPos + height
                 ) return true;
 
                 return false;
-            }
-
-            void setAnchorPoint(double x, double y) {
-                anchorX = x, anchorY = y;
             }
 
             void setColor(vex::color c) {
@@ -77,8 +73,8 @@ namespace ui {
                         Brain.Screen.setPenColor(outline);
                         Brain.Screen.setFillColor(color);
                         Brain.Screen.drawRectangle(
-                            xPos - (width * anchorX),
-                            yPos - (height * anchorY), 
+                            xPos,
+                            yPos,
                             width,
                             height
                         );
@@ -86,8 +82,8 @@ namespace ui {
                     case Shape::Circle:
                         Brain.Screen.setPenColor(outline);
                         Brain.Screen.drawCircle(
-                            xPos - (width * anchorX),
-                            yPos - (height * anchorY),
+                            xPos,
+                            yPos,
                             width, 
                             color
                         );
@@ -317,14 +313,12 @@ void driveUI() {
 void selectionUI() {
   Brain.Screen.print("Select field position");
 
-  ui::Button leftButton = ui::Button(ui::Shape::Rect, 0, 240, 240, 100);
+  ui::Button leftButton = ui::Button(ui::Shape::Rect, 0, 240, 240, 100, 0, 1);
   leftButton.setColor(color(0, 0, 255));
-  leftButton.setAnchorPoint(0, 1);
   leftButton.draw();
 
-  ui::Button rightButton = ui::Button(ui::Shape::Rect, 480, 240, 240, 100);
+  ui::Button rightButton = ui::Button(ui::Shape::Rect, 480, 240, 240, 100, 1, 1);
   rightButton.setColor(color(255, 0, 0));
-  rightButton.setAnchorPoint(1, 1);
   rightButton.draw();
 
   bool selected = false;
