@@ -14,12 +14,88 @@
 // ---- END VEXCODE CONFIGURED DEVICES ----
 
 #include "vex.h"
-#include "ui.h"
 #include <functional>
 #include <sstream>
+#include <math.h>
 #include <map>
 
 using namespace vex;
+
+// ================ UI wrapper ================ //
+
+// Q: Why?
+// A: VEXCode resets the compile_commands.json
+// before each compile, so a seperate file could
+// not be included
+
+namespace ui {
+    enum Shape { Rect, Circle };
+
+    class Button {
+        private:
+            int shape;
+            int xPos, yPos;
+            int width, height;
+            int anchorX, anchorY;
+            vex::color color;
+            vex::color outline;
+
+        public:
+            Button(Shape s, int x, int y, int w, int h) {
+                shape = s;
+                xPos = x, yPos = y;
+                width = w, height = h;
+            }
+
+            bool pressing() {
+                if (
+                    Brain.Screen.pressing() &&
+                    Brain.Screen.xPosition() >= xPos + (width * anchorX) &&
+                    Brain.Screen.xPosition() < xPos + (width * anchorX) + width &&
+                    Brain.Screen.yPosition() >= yPos + (height * anchorY) &&
+                    Brain.Screen.yPosition() < yPos + (height * anchorY) + height
+                ) return true;
+
+                return false;
+            }
+
+            void setAnchorPoint(double x, double y) {
+                anchorX = x, anchorY = y;
+            }
+
+            void setColor(vex::color c) {
+                color = c;
+            }
+
+            void setOutlineColor(vex::color c) {
+                outline = c;
+            }
+
+            void draw() {
+                switch (shape) {
+                    case Shape::Rect:
+                        Brain.Screen.setPenColor(outline);
+                        Brain.Screen.setFillColor(color);
+                        Brain.Screen.drawRectangle(
+                            xPos + (width * anchorX),
+                            yPos + (height * anchorY), 
+                            width - (width * anchorX),
+                            height - (height * anchorY)
+                        );
+                        break;
+                    case Shape::Circle:
+                        Brain.Screen.setPenColor(outline);
+                        Brain.Screen.drawCircle(
+                            xPos + (width * anchorX),
+                            yPos + (height * anchorY),
+                            width - (width * anchorX), 
+                            color
+                        );
+                        break;
+                }
+            }
+    };
+}
 
 // ================= Globals ================= //
 
