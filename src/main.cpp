@@ -252,6 +252,8 @@ void buttonListener() {
   }
 }
 
+// ==================== UI ==================== //
+
 void driveUI() {
   while(true) {
     // Game mode
