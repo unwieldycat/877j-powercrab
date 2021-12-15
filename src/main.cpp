@@ -15,6 +15,7 @@
 
 #include "vex.h"
 #include "ui.h"
+#include <functional>
 #include <sstream>
 #include <map>
 
@@ -30,7 +31,7 @@ bool turbo = false;
 // =========== Autonomous Routines =========== //
 
 // Type definition for routine function
-typedef std::function<void> routineFn;
+typedef std::function<void()> routineFn;
 
 // Map of routines
 std::map<int, routineFn> routines;
