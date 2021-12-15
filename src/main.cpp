@@ -77,18 +77,18 @@ namespace ui {
                         Brain.Screen.setPenColor(outline);
                         Brain.Screen.setFillColor(color);
                         Brain.Screen.drawRectangle(
-                            xPos + (width * anchorX),
-                            yPos + (height * anchorY), 
-                            width - (width * anchorX),
-                            height - (height * anchorY)
+                            xPos - (width * anchorX),
+                            yPos - (height * anchorY), 
+                            width,
+                            height
                         );
                         break;
                     case Shape::Circle:
                         Brain.Screen.setPenColor(outline);
                         Brain.Screen.drawCircle(
-                            xPos + (width * anchorX),
-                            yPos + (height * anchorY),
-                            width - (width * anchorX), 
+                            xPos - (width * anchorX),
+                            yPos - (height * anchorY),
+                            width, 
                             color
                         );
                         break;
