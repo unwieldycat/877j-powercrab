@@ -36,6 +36,7 @@ namespace ui {
             int shape;
             int xPos, yPos;
             int width, height;
+            std::string text;
             vex::color color;
             vex::color outline;
 
@@ -57,6 +58,10 @@ namespace ui {
                 ) return true;
 
                 return false;
+            }
+
+            void setText(std::string s) {
+              text = s;
             }
 
             void setColor(vex::color c) {
@@ -88,6 +93,10 @@ namespace ui {
                             color
                         );
                         break;
+                }
+                if (text.length() > 0) {
+                  int textOffset = text.length() * 5;
+                  Brain.Screen.printAt(xPos + width / 2 - textOffset, yPos + height / 2 + 6, text.c_str());  
                 }
             }
     };
@@ -317,10 +326,12 @@ void selectionUI() {
 
   ui::Button leftButton = ui::Button(ui::Shape::Rect, 0, 240, 240, 100, 0, 1);
   leftButton.setColor(color(0, 0, 255));
+  leftButton.setText("Left");
   leftButton.draw();
 
   ui::Button rightButton = ui::Button(ui::Shape::Rect, 480, 240, 240, 100, 1, 1);
   rightButton.setColor(color(255, 0, 0));
+  rightButton.setText("Right");
   rightButton.draw();
 
   bool selected = false;
