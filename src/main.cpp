@@ -43,71 +43,71 @@ namespace ui {
     };
 
     class Button: public Element {
-        protected:
-            int shape = Shape::Rect;
-            vex::color color = vex::color(128, 128, 128);
-            vex::color outline = vex::color(0, 0, 0);
-            std::string text; 
+      protected:
+        int shape = Shape::Rect;
+        vex::color color = vex::color(128, 128, 128);
+        vex::color outline = vex::color(0, 0, 0);
+        std::string text; 
 
-        public:
-            Button(int x, int y, int w, int h, double ax = 0, double ay = 0) {
-                xPos = x - (w * ax);
-                yPos = y - (h * ay);
-                width = w, height = h;
+      public:
+        Button(int x, int y, int w, int h, double ax = 0, double ay = 0) {
+            xPos = x - (w * ax);
+            yPos = y - (h * ay);
+            width = w, height = h;
+        }
+
+        bool pressing() {
+            if (
+                Brain.Screen.pressing() &&
+                Brain.Screen.xPosition() >= xPos &&
+                Brain.Screen.xPosition() < xPos + width &&
+                Brain.Screen.yPosition() >= yPos &&
+                Brain.Screen.yPosition() < yPos + height
+            ) return true;
+
+            return false;
+        }
+
+        void setText(std::string s) {
+          text = s;
+        }
+
+        void setColor(vex::color c) {
+            color = c;
+        }
+
+        void setOutlineColor(vex::color c) {
+            outline = c;
+        }
+
+        void draw() override {
+            switch (shape) {
+                case Shape::Rect:
+                    Brain.Screen.setPenColor(outline);
+                    Brain.Screen.setFillColor(color);
+                    Brain.Screen.drawRectangle(
+                        xPos,
+                        yPos,
+                        width,
+                        height
+                    );
+                    break;
+                case Shape::Circle:
+                    Brain.Screen.setPenColor(outline);
+                    Brain.Screen.drawCircle(
+                        xPos,
+                        yPos,
+                        width, 
+                        color
+                    );
+                    break;
             }
-
-            bool pressing() {
-                if (
-                    Brain.Screen.pressing() &&
-                    Brain.Screen.xPosition() >= xPos &&
-                    Brain.Screen.xPosition() < xPos + width &&
-                    Brain.Screen.yPosition() >= yPos &&
-                    Brain.Screen.yPosition() < yPos + height
-                ) return true;
-
-                return false;
+            if (text.length() > 0) {
+              int textOffsetX = Brain.Screen.getStringWidth(text.c_str());
+              int textOffsetY = Brain.Screen.getStringHeight(text.c_str());
+              Brain.Screen.printAt(xPos + width / 2 - textOffsetX, yPos + height / 2 - textOffsetY, text.c_str());  
             }
-
-            void setText(std::string s) {
-              text = s;
-            }
-
-            void setColor(vex::color c) {
-                color = c;
-            }
-
-            void setOutlineColor(vex::color c) {
-                outline = c;
-            }
-
-            void draw() override {
-                switch (shape) {
-                    case Shape::Rect:
-                        Brain.Screen.setPenColor(outline);
-                        Brain.Screen.setFillColor(color);
-                        Brain.Screen.drawRectangle(
-                            xPos,
-                            yPos,
-                            width,
-                            height
-                        );
-                        break;
-                    case Shape::Circle:
-                        Brain.Screen.setPenColor(outline);
-                        Brain.Screen.drawCircle(
-                            xPos,
-                            yPos,
-                            width, 
-                            color
-                        );
-                        break;
-                }
-                if (text.length() > 0) {
-                  int textOffsetX = Brain.Screen.getStringWidth(text.c_str());
-                  int textOffsetY = Brain.Screen.getStringHeight(text.c_str());
-                  Brain.Screen.printAt(xPos + width / 2 - textOffsetX, yPos + height / 2 - textOffsetY, text.c_str());  
-                }
-            }
+        }
     };
 }
 
