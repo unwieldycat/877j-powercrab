@@ -69,7 +69,7 @@ namespace ui {
           color = c;
         }
 
-        void render() {
+        void render() override {
           // Set color of pen and fill
           Brain.Screen.setFillColor(bgColor);
           Brain.Screen.setPenColor(color);
