@@ -39,7 +39,7 @@ namespace ui {
       public:
         Element() {}
         ~Element() {}
-        virtual void draw() = 0;
+        virtual void render() = 0;
     };
 
     class Textlabel: public Element {
@@ -69,7 +69,7 @@ namespace ui {
           color = c;
         }
 
-        void draw() {
+        void render() {
           // Set color of pen and fill
           Brain.Screen.setFillColor(bgColor);
           Brain.Screen.setPenColor(color);
@@ -123,7 +123,7 @@ namespace ui {
             outline = c;
         }
 
-        void draw() override {
+        void render() override {
             switch (shape) {
                 case Shape::Rect:
                     Brain.Screen.setPenColor(outline);
@@ -379,12 +379,12 @@ void selectionUI() {
   ui::Button leftButton = ui::Button(0, 240, 240, 100, 0, 1);
   leftButton.setColor(color(0, 0, 255));
   leftButton.setText("Left");
-  leftButton.draw();
+  leftButton.render();
 
   ui::Button rightButton = ui::Button(480, 240, 240, 100, 1, 1);
   rightButton.setColor(color(255, 0, 0));
   rightButton.setText("Right");
-  rightButton.draw();
+  rightButton.render();
 
   bool selected = false;
 
