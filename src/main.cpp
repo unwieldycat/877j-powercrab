@@ -45,9 +45,9 @@ namespace ui {
     class Textlabel: public Element {
       protected:
         std::string text;
-        vex::fontType font;
-        vex::color bgColor;
-        vex::color color;
+        vex::fontType font = vex::fontType::mono20;
+        vex::color bgColor = vex::color::transparent;
+        vex::color color = vex::color::white;
       public: 
         Textlabel(std::string t, int x, int y, double ax = 0, double ay = 0) {
           width = Brain.Screen.getStringWidth(t.c_str());
