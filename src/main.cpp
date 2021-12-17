@@ -42,6 +42,44 @@ namespace ui {
         virtual void draw() = 0;
     };
 
+    class Textlabel: public Element {
+      protected:
+        std::string text;
+        vex::fontType font;
+        vex::color bgColor;
+        vex::color color;
+      public: 
+        Textlabel(std::string t, vex::fontType f, int x, int y, double ax = 0, double ay = 0) {
+          font = f;
+          width = Brain.Screen.getStringWidth(t.c_str());
+          height = Brain.Screen.getStringHeight(t.c_str());
+          xPos = x - (width * ax);
+          yPos = y - (height * ay);
+          text = t;
+        }
+
+        void setBackgroundColor(vex::color c) {
+          bgColor = c;
+        }
+        
+        void setColor(vex::color c) {
+          color = c;
+        }
+
+        void draw() {
+          // Set color of pen and fill
+          Brain.Screen.setFillColor(bgColor);
+          Brain.Screen.setPenColor(color);
+
+          // Draw text
+          Brain.Screen.printAt(xPos + width / 2 - width, yPos + height / 2 - height, text.c_str());
+
+          // Reset colors
+          Brain.Screen.setFillColor(transparent);
+          Brain.Screen.setPenColor(white);
+        }
+    };
+
     class Button: public Element {
       protected:
         int shape = Shape::Rect;
