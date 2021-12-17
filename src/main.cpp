@@ -95,8 +95,9 @@ namespace ui {
                         break;
                 }
                 if (text.length() > 0) {
-                  int textOffset = text.length() * 5;
-                  Brain.Screen.printAt(xPos + width / 2 - textOffset, yPos + height / 2 + 6, text.c_str());  
+                  int textOffsetX = Brain.Screen.getStringWidth(text.c_str());
+                  int textOffsetY = Brain.Screen.getStringHeight(text.c_str());
+                  Brain.Screen.printAt(xPos + width / 2 - textOffsetX, yPos + height / 2 - textOffsetY, text.c_str());  
                 }
             }
     };
