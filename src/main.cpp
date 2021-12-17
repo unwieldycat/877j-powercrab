@@ -371,12 +371,12 @@ void driveUI() {
 void selectionUI() {
   Brain.Screen.print("Select field position");
 
-  ui::Button leftButton = ui::Button(ui::Shape::Rect, 0, 240, 240, 100, 0, 1);
+  ui::Button leftButton = ui::Button(0, 240, 240, 100, 0, 1);
   leftButton.setColor(color(0, 0, 255));
   leftButton.setText("Left");
   leftButton.draw();
 
-  ui::Button rightButton = ui::Button(ui::Shape::Rect, 480, 240, 240, 100, 1, 1);
+  ui::Button rightButton = ui::Button(480, 240, 240, 100, 1, 1);
   rightButton.setColor(color(255, 0, 0));
   rightButton.setText("Right");
   rightButton.draw();
