@@ -23,7 +23,7 @@ using namespace vex;
 
 // ================ UI wrapper ================ //
 
-// Q: Why?
+// Q: Why is this here?
 // A: VEXCode resets the compile_commands.json
 // before each compile, so a seperate file could
 // not be included
