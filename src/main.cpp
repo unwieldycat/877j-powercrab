@@ -81,6 +81,7 @@ namespace ui {
           // Reset colors
           Brain.Screen.setFillColor(transparent);
           Brain.Screen.setPenColor(white);
+          Brain.Screen.setFont(vex::fontType::mono20);
         }
     };
 
