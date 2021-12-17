@@ -49,13 +49,16 @@ namespace ui {
         vex::color bgColor;
         vex::color color;
       public: 
-        Textlabel(std::string t, vex::fontType f, int x, int y, double ax = 0, double ay = 0) {
-          font = f;
+        Textlabel(std::string t, int x, int y, double ax = 0, double ay = 0) {
           width = Brain.Screen.getStringWidth(t.c_str());
           height = Brain.Screen.getStringHeight(t.c_str());
           xPos = x - (width * ax);
           yPos = y - (height * ay);
           text = t;
+        }
+
+        void setFont(vex::fontType f) {
+          font = f;
         }
 
         void setBackgroundColor(vex::color c) {
@@ -70,6 +73,7 @@ namespace ui {
           // Set color of pen and fill
           Brain.Screen.setFillColor(bgColor);
           Brain.Screen.setPenColor(color);
+          Brain.Screen.setFont(font);
 
           // Draw text
           Brain.Screen.printAt(xPos + width / 2 - width, yPos + height / 2 - height, text.c_str());
