@@ -31,18 +31,26 @@ using namespace vex;
 namespace ui {
     enum Shape { Rect, Circle };
 
-    class Button {
-        private:
-            int shape;
-            int xPos, yPos;
-            int width, height;
-            std::string text;
-            vex::color color;
-            vex::color outline;
+    class Element {
+      protected:
+        int xPos, yPos;
+        int width, height;
+        
+      public:
+        Element() {}
+        ~Element() {}
+        virtual void draw() = 0;
+    };
+
+    class Button: public Element {
+        protected:
+            int shape = Shape::Rect;
+            vex::color color = vex::color(128, 128, 128);
+            vex::color outline = vex::color(0, 0, 0);
+            std::string text; 
 
         public:
-            Button(Shape s, int x, int y, int w, int h, double ax = 0, double ay = 0) {
-                shape = s;
+            Button(int x, int y, int w, int h, double ax = 0, double ay = 0) {
                 xPos = x - (w * ax);
                 yPos = y - (h * ay);
                 width = w, height = h;
@@ -72,7 +80,7 @@ namespace ui {
                 outline = c;
             }
 
-            void draw() {
+            void draw() override {
                 switch (shape) {
                     case Shape::Rect:
                         Brain.Screen.setPenColor(outline);
