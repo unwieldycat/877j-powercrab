@@ -31,6 +31,9 @@ using namespace vex;
 namespace ui {
     enum Shape { Rect, Circle };
 
+    /**
+     * @brief Base class for all UI elements
+     */
     class Element {
       protected:
         int xPos, yPos;
@@ -42,13 +45,26 @@ namespace ui {
         virtual void render() = 0;
     };
 
+    /**
+     * @brief TextLabel UI element
+     */
     class Textlabel: public Element {
       protected:
         std::string text;
         vex::fontType font = vex::fontType::mono20;
         vex::color bgColor = vex::color::transparent;
         vex::color color = vex::color::white;
+
       public: 
+        /**
+         * @brief Construct a new Textlabel object
+         * 
+         * @param t Text
+         * @param x X coordinate of origin
+         * @param y Y coordinate of origin
+         * @param ax X coordinate of anchor point
+         * @param ay Y coordinate of anchor point
+         */
         Textlabel(std::string t, int x, int y, double ax = 0, double ay = 0) {
           width = Brain.Screen.getStringWidth(t.c_str());
           height = Brain.Screen.getStringHeight(t.c_str());
@@ -57,18 +73,33 @@ namespace ui {
           text = t;
         }
 
+        /**
+         * @brief Set font type
+         * @param f Vex font type
+         */
         void setFont(vex::fontType f) {
           font = f;
         }
 
+        /**
+         * @brief Set the background color
+         * @param c Vex color
+         */
         void setBackgroundColor(vex::color c) {
           bgColor = c;
         }
         
+        /**
+         * @brief Set the text color
+         * @param c Vex color
+         */
         void setColor(vex::color c) {
           color = c;
         }
 
+        /**
+         * @brief Render element to screen
+         */
         void render() override {
           // Set color of pen and fill
           Brain.Screen.setFillColor(bgColor);
@@ -85,6 +116,9 @@ namespace ui {
         }
     };
 
+    /**
+     * @brief Button UI element
+     */
     class Button: public Element {
       protected:
         int shape = Shape::Rect;
@@ -93,12 +127,25 @@ namespace ui {
         std::string text; 
 
       public:
+        /**
+         * @brief Construct a new Button object
+         * @param x X coordinate of origin
+         * @param y Y coordinate of origin
+         * @param w Width of button
+         * @param h Height of button
+         * @param ax X coordinate of anchor point
+         * @param ay Y coordinate of anchor point
+         */
         Button(int x, int y, int w, int h, double ax = 0, double ay = 0) {
             xPos = x - (w * ax);
             yPos = y - (h * ay);
             width = w, height = h;
         }
 
+        /**
+         * @brief Check if button is pressing
+         * @return boolean
+         */
         bool pressing() {
             if (
                 Brain.Screen.pressing() &&
@@ -111,18 +158,33 @@ namespace ui {
             return false;
         }
 
+        /**
+         * @brief Set text inside button
+         * @param s Text string
+         */
         void setText(std::string s) {
           text = s;
         }
 
+        /**
+         * @brief Set the button color
+         * @param c Vex color
+         */
         void setColor(vex::color c) {
             color = c;
         }
 
+        /**
+         * @brief Set the outline color
+         * @param c Vex color
+         */
         void setOutlineColor(vex::color c) {
             outline = c;
         }
 
+        /**
+         * @brief Render element to screen
+         */
         void render() override {
             switch (shape) {
                 case Shape::Rect:
