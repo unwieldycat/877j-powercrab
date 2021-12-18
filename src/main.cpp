@@ -4,13 +4,13 @@
 // ---- START VEXCODE CONFIGURED DEVICES ----
 // Robot Configuration:
 // [Name]               [Type]        [Port(s)]
-// forkliftMotor1       motor         3               
 // Controller1          controller                    
-// liftMotor            motor         4               
-// intakeMotor          motor         5               
 // LimitSwitchA         limit         A               
-// forkliftMotor2       motor         11              
-// Drivetrain           drivetrain    1, 6, 2, 7, 20  
+// Drivetrain           drivetrain    3, 2, 6, 1      
+// forkliftMotor1       motor         4               
+// forkliftMotor2       motor         7               
+// intakeMotor          motor         5               
+// liftMotor            motor         11              
 // ---- END VEXCODE CONFIGURED DEVICES ----
 
 #include "vex.h"
@@ -230,15 +230,6 @@ void driveUI() {
     }
 
     Brain.Screen.setFillColor(transparent);
-
-    // Heading
-    double const compassHeading = Drivetrain.heading(deg);
-    std::ostringstream headingStr;
-    headingStr << "Heading: " << round(compassHeading);
-
-    Brain.Screen.clearLine(4);
-    Brain.Screen.setCursor(4, 1);
-    Brain.Screen.print(headingStr.str().c_str());
 
     wait(1, sec);
   }
