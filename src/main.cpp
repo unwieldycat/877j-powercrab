@@ -271,6 +271,14 @@ void selectionUI() {
     }
   }
 
+  // Clear screen
+  Brain.Screen.clearScreen();
+  delete &leftButton;
+  delete &rightButton;
+
+  // Draw next step
+  ui::Textlabel("Select routine", 240, 0, 0.5, 0);
+
 }
 
 // ========= Main Competition Methods ========= //
