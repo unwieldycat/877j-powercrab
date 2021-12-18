@@ -245,7 +245,8 @@ void driveUI() {
 }
 
 void selectionUI() {
-  Brain.Screen.print("Select field position");
+  // Draw first step
+  ui::Textlabel("Select field origin position", 240, 0, 0.5, 0);
 
   ui::Button leftButton = ui::Button(0, 240, 240, 100, 0, 1);
   leftButton.setColor(color(0, 0, 255));
@@ -257,6 +258,7 @@ void selectionUI() {
   rightButton.setText("Right");
   rightButton.render();
 
+  // Await user selection
   bool selected = false;
 
   while(!selected) {
