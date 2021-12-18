@@ -37,6 +37,10 @@ namespace ui {
           font = f;
         }
 
+        void setText(std::string s) {
+          text = s;
+        }
+
         void setBackgroundColor(vex::color c) {
           bgColor = c;
         }

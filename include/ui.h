@@ -47,6 +47,12 @@ namespace ui {
         void setFont(vex::fontType f);
 
         /**
+         * @brief Change the text of the TextLabel
+         * @param s Text to change it to
+         */
+        void setText(std::string s);
+
+        /**
          * @brief Set the background color
          * @param c Vex color
          */
