@@ -24,10 +24,13 @@ using namespace vex;
 
 // ================= Globals ================= //
 
+enum FieldOrigin { Left, Right };
+
 competition Competition;
 int selectedAutonRoutine;
 bool reversed = false;
 bool turbo = false;
+int origin;
 
 // =========== Autonomous Routines =========== //
 
