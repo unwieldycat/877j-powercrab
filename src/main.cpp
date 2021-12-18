@@ -261,12 +261,12 @@ void selectionUI() {
 
   while(!selected) {
     if (leftButton.pressing()) {
-      // TODO: Set some value to indicate pressed
+      origin = FieldOrigin::Left;
       selected = true;
     }
 
     if (rightButton.pressing()) {
-      // TODO: Set some value to indicate pressed
+      origin = FieldOrigin::Right;
       selected = true;
     }
   }
