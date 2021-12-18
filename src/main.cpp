@@ -246,7 +246,7 @@ void driveUI() {
 
 void selectionUI() {
   // Draw first step
-  ui::Textlabel("Select field origin position", 240, 0, 0.5, 0);
+  ui::Textlabel stepLabel = ui::Textlabel("Select field origin position", 240, 0, 0.5, 0);
 
   ui::Button leftButton = ui::Button(0, 240, 240, 100, 0, 1);
   leftButton.setColor(color(0, 0, 255));
@@ -279,7 +279,7 @@ void selectionUI() {
   delete &rightButton;
 
   // Draw next step
-  ui::Textlabel("Select routine", 240, 0, 0.5, 0);
+  stepLabel.setText("Select routine");
 
 }
 
