@@ -13,6 +13,7 @@
 // liftMotor            motor         11              
 // ---- END VEXCODE CONFIGURED DEVICES ----
 
+#include "autonutils.h"
 #include "vex.h"
 #include "ui.h"
 #include <functional>
@@ -24,21 +25,12 @@ using namespace vex;
 
 // ================= Globals ================= //
 
-enum FieldOrigin { Left, Right };
-
+autonutils::RoutineManager routineManager;
 competition Competition;
 int selectedAutonRoutine;
 bool reversed = false;
 bool turbo = false;
 int origin;
-
-// =========== Autonomous Routines =========== //
-
-// Type definition for routine function
-typedef std::function<void()> routineFn;
-
-// Map of routines
-std::map<int, routineFn> routines;
 
 // ============== Control Loops ============== //
 
@@ -254,12 +246,12 @@ void selectionUI() {
 
   while(!selected) {
     if (leftButton.pressing()) {
-      origin = FieldOrigin::Left;
+      origin = autonutils::FieldOrigin::Left;
       selected = true;
     }
 
     if (rightButton.pressing()) {
-      origin = FieldOrigin::Right;
+      origin = autonutils::FieldOrigin::Right;
       selected = true;
     }
   }
@@ -280,17 +272,14 @@ void pre_auton(void) {
   vexcodeInit();
   selectionUI();
   driveUI();
-}
 
-void autonomous(void) {
-  // Register autonomous routines
-  routines.emplace(0, [&] () -> void {
+  routineManager.add(0, autonutils::FieldOrigin::Both, [&] () -> void {
     liftMotor.spinFor(360, deg, true);
     Drivetrain.driveFor(10, distanceUnits::cm, true);
     intakeMotor.spin(forward);
   });
 
-  routines.emplace(1, [&] () -> void {
+  routineManager.add(1, autonutils::FieldOrigin::Both, [&] () -> void {
     forkliftMotor1.spinFor(forward, 360, deg, false);
     forkliftMotor2.spinFor(forward, 360, deg, false);
     Drivetrain.driveFor(75, distanceUnits::cm, true);
@@ -298,9 +287,10 @@ void autonomous(void) {
     forkliftMotor1.spinFor(reverse, 360, deg, false);
     forkliftMotor2.spinFor(reverse, 360, deg, false);
   });
+}
 
-  // Run selected routine
-  routines.find(selectedAutonRoutine)->second();
+void autonomous(void) {
+  routineManager.exec(selectedAutonRoutine);
 }
 
 void usercontrol(void) {
