@@ -13,6 +13,8 @@
 // liftMotor            motor         11              
 // ---- END VEXCODE CONFIGURED DEVICES ----
 
+// ================================ Imports ================================ //
+
 #include "autonutils.h"
 #include "vex.h"
 #include "ui.h"
@@ -23,7 +25,7 @@
 
 using namespace vex;
 
-// ================= Globals ================= //
+// ================================ Globals ================================ //
 
 autonutils::RoutineManager routineManager;
 competition Competition;
@@ -32,7 +34,7 @@ bool reversed = false;
 bool turbo = false;
 int origin;
 
-// ============== Control Loops ============== //
+// ============================= Control Loops ============================= //
 
 void liftControlLoop() {
   bool liftActive = false;
@@ -176,7 +178,7 @@ void buttonListener() {
   }
 }
 
-// ==================== UI ==================== //
+// =================================== UI =================================== //
 
 void driveUI() {
   while(true) {
@@ -266,7 +268,7 @@ void selectionUI() {
 
 }
 
-// ========= Main Competition Methods ========= //
+// ============================== Main Methods ============================== //
 
 void pre_auton(void) {
   vexcodeInit();
@@ -305,7 +307,7 @@ void usercontrol(void) {
   driveLoop.join();
 }
 
-// ================ Entrypoint ================ //
+// =============================== Entrypoint =============================== //
 
 int main() {
   // Set up callbacks for autonomous and driver control periods.
