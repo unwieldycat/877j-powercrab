@@ -1,6 +1,11 @@
 #ifndef _UI_
 #define _UI_
 
+// ================================ Imports ================================ //
+
+#include "vex.h"
+#include <math.h>
+
 // ============================== UI (Headers) ============================== //
 
 namespace ui {
@@ -15,8 +20,8 @@ namespace ui {
         int width, height;
         
       public:
-        Element() {}
-        ~Element() {}
+        Element();
+        ~Element();
         virtual void render();
     };
 
