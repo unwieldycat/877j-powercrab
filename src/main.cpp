@@ -245,15 +245,6 @@ void driveUI() {
 
     Brain.Screen.setFillColor(transparent);
 
-    // Heading
-    double const compassHeading = Drivetrain.heading(deg);
-    std::ostringstream headingStr;
-    headingStr << "Heading: " << round(compassHeading);
-
-    Brain.Screen.clearLine(4);
-    Brain.Screen.setCursor(4, 1);
-    Brain.Screen.print(headingStr.str().c_str());
-
     wait(1, sec);
   }
 }
