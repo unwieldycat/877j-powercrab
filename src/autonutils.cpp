@@ -1,62 +1,39 @@
 // ================================ Imports ================================ //
 
+#include "autonutils.h"
 #include <vector>
 #include <algorithm>
 #include <functional>
 
 // ========================== Autonomous Utilities ========================== //
 
-namespace autonutils
+autonutils::RoutineManager::RoutineManager() {}
+autonutils::RoutineManager::~RoutineManager() {}
+
+std::vector<int> autonutils::RoutineManager::find(int s)
 {
-	enum FieldOrigin
+	std::vector<int> matches;
+	for (Routine &r : routines)
 	{
-		Left,
-		Right,
-		Both
-	};
+		if (r.side == s)
+			matches.push_back(r.id);
+	}
+	return matches;
+}
 
-	struct Routine
+void autonutils::RoutineManager::add(int i, int s, std::function<void()> a)
+{
+	Routine r;
+	r.id = i, r.side = s;
+	r.action = a;
+	routines.push_back(r);
+}
+
+void autonutils::RoutineManager::exec(int i)
+{
+	for (Routine &r : routines)
 	{
-		int id;
-		int side;
-		std::function<void()> action;
-	};
-
-	class RoutineManager
-	{
-	private:
-		std::vector<Routine> routines;
-
-	public:
-		RoutineManager() {}
-		~RoutineManager() {}
-
-		std::vector<int> find(int s)
-		{
-			std::vector<int> matches;
-			for (Routine &r : routines)
-			{
-				if (r.side == s)
-					matches.push_back(r.id);
-			}
-			return matches;
-		}
-
-		void add(int i, int s, std::function<void()> a)
-		{
-			Routine r;
-			r.id = i, r.side = s;
-			r.action = a;
-			routines.push_back(r);
-		}
-
-		void exec(int i)
-		{
-			for (Routine &r : routines)
-			{
-				if (r.id == i)
-					r.action();
-			}
-		}
-	};
+		if (r.id == i)
+			r.action();
+	}
 }
