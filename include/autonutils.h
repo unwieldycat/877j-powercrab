@@ -37,7 +37,7 @@ namespace autonutils
 		std::vector<Routine> routines;
 
 	public:
-		RoutineManager(){};
+		RoutineManager();
 
 		/**
 		 * @brief Find ids of routines that start from a specified side
