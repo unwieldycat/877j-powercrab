@@ -6,8 +6,10 @@
 
 // ========================== Autonomous Utilities ========================== //
 
-namespace autonutils {
-    enum FieldOrigin {
+namespace autonutils
+{
+    enum FieldOrigin
+    {
         Left,
         Right,
         Both

@@ -9,11 +9,13 @@
 
 // ====================== Autonomous Manager (Headers) ====================== //
 
-namespace autonutils {
+namespace autonutils
+{
     /**
      * @brief Side the autonomous routine starts on
      */
-    enum FieldOrigin {
+    enum FieldOrigin
+    {
         Left,
         Right,
         Both

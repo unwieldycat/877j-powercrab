@@ -4,13 +4,13 @@
 // ---- START VEXCODE CONFIGURED DEVICES ----
 // Robot Configuration:
 // [Name]               [Type]        [Port(s)]
-// Controller1          controller                    
-// LimitSwitchA         limit         A               
-// Drivetrain           drivetrain    3, 2, 6, 1      
-// forkliftMotor1       motor         4               
-// forkliftMotor2       motor         7               
-// intakeMotor          motor         5               
-// liftMotor            motor         11              
+// Controller1          controller
+// LimitSwitchA         limit         A
+// Drivetrain           drivetrain    3, 2, 6, 1
+// forkliftMotor1       motor         4
+// forkliftMotor2       motor         7
+// intakeMotor          motor         5
+// liftMotor            motor         11
 // ---- END VEXCODE CONFIGURED DEVICES ----
 
 // ================================ Imports ================================ //
@@ -36,55 +36,64 @@ int origin;
 
 // ============================= Control Loops ============================= //
 
-void liftControlLoop() {
+void liftControlLoop()
+{
   bool liftActive = false;
   bool intakeActive = false;
   bool brakeLift = true;
 
-  while(Competition.isDriverControl()) {
+  while (Competition.isDriverControl())
+  {
     bool const R2Pressing = Controller1.ButtonR2.pressing();
     bool const R1Pressing = Controller1.ButtonR1.pressing();
     bool const UpPressing = Controller1.ButtonUp.pressing();
     bool const DownPressing = Controller1.ButtonDown.pressing();
 
     // Check if button B is pressing when bucket is closed and open it
-    if (UpPressing && !DownPressing) {
+    if (UpPressing && !DownPressing)
+    {
       intakeActive = true;
       intakeMotor.spin(forward);
     }
 
     // Check if button B is pressing when bucket is open and close it
-    if (DownPressing && !UpPressing) {
+    if (DownPressing && !UpPressing)
+    {
       intakeActive = true;
       intakeMotor.spin(reverse);
     }
 
     // Turn off intake if no input
-    if (!UpPressing && !DownPressing && intakeActive) {
+    if (!UpPressing && !DownPressing && intakeActive)
+    {
       intakeActive = false;
       intakeMotor.stop();
-    } 
+    }
 
     // Check if running without user input and stop
-    if (!R2Pressing && !R1Pressing && liftActive) {
+    if (!R2Pressing && !R1Pressing && liftActive)
+    {
       liftMotor.stop(brake);
       liftActive = false;
       brakeLift = true;
-    } 
+    }
 
-    if (brakeLift) {
+    if (brakeLift)
+    {
       liftMotor.stop(brake);
     }
 
     // Listen for reverse input
-    if (R2Pressing && !R1Pressing) {
+    if (R2Pressing && !R1Pressing)
+    {
       liftMotor.spin(reverse, 100, pct);
       liftActive = true;
       brakeLift = false;
     }
 
     // Listen for foward input
-    if (R1Pressing && !R2Pressing) {
+    if (R1Pressing && !R2Pressing)
+    {
       liftMotor.spin(forward, 100, pct);
       liftActive = true;
       brakeLift = false;
@@ -92,29 +101,34 @@ void liftControlLoop() {
   }
 }
 
-void forkliftControlLoop() {
+void forkliftControlLoop()
+{
   bool forkliftActive = false;
 
-  while(Competition.isDriverControl()) {
+  while (Competition.isDriverControl())
+  {
     bool const L2Pressing = Controller1.ButtonL2.pressing();
     bool const L1Pressing = Controller1.ButtonL1.pressing();
 
     // Check if running without user input and stop
-    if ((!L2Pressing && !L1Pressing) && forkliftActive) {
+    if ((!L2Pressing && !L1Pressing) && forkliftActive)
+    {
       forkliftActive = false;
       forkliftMotor1.stop(coast);
       forkliftMotor2.stop(coast);
     }
 
     // Listen for reverse input
-    if (L2Pressing && !L1Pressing && !LimitSwitchA.pressing()) {
+    if (L2Pressing && !L1Pressing && !LimitSwitchA.pressing())
+    {
       forkliftMotor1.spin(reverse, 100, pct);
       forkliftMotor2.spin(reverse, 100, pct);
       forkliftActive = true;
     }
 
     // Listen for foward input
-    if (L1Pressing && !L2Pressing) {
+    if (L1Pressing && !L2Pressing)
+    {
       forkliftMotor1.spin(forward, 100, pct);
       forkliftMotor2.spin(forward, 100, pct);
       forkliftActive = true;
@@ -122,33 +136,43 @@ void forkliftControlLoop() {
   }
 }
 
-void driveControlLoop() {
+void driveControlLoop()
+{
   bool driving = false;
   bool turning = false;
 
-  while(Competition.isDriverControl()) {
+  while (Competition.isDriverControl())
+  {
     int const YPos = (reversed) ? -(Controller1.Axis3.position()) : Controller1.Axis3.position();
-    int const XPos = (reversed) ? -(Controller1.Axis1.position()) : Controller1.Axis1.position(); 
+    int const XPos = (reversed) ? -(Controller1.Axis1.position()) : Controller1.Axis1.position();
 
     // Foward-backward movement
     // Check if control input is greater than 5 for deadzones
-    if (YPos > 5 || YPos < -5) {
+    if (YPos > 5 || YPos < -5)
+    {
       Drivetrain.setDriveVelocity(abs((turbo) ? YPos : YPos / 2), pct);
-      if (YPos < 0) Drivetrain.drive(reverse);
-      if (YPos > 0) Drivetrain.drive(forward);
+      if (YPos < 0)
+        Drivetrain.drive(reverse);
+      if (YPos > 0)
+        Drivetrain.drive(forward);
       driving = true;
-    } else if (driving) {
+    }
+    else if (driving)
+    {
       Drivetrain.setDriveVelocity(0, pct);
       driving = false;
     }
 
     // left-right movement
     // Check if control input is greater than 5 for deadzones
-    if (XPos > 5 || XPos < -5) {
+    if (XPos > 5 || XPos < -5)
+    {
       Drivetrain.setTurnVelocity(XPos, pct);
       Drivetrain.turn(right);
       turning = true;
-    } else if (turning) {
+    }
+    else if (turning)
+    {
       Drivetrain.setTurnVelocity(0, pct);
       turning = false;
     }
@@ -157,37 +181,48 @@ void driveControlLoop() {
   }
 }
 
-void buttonListener() {
+void buttonListener()
+{
   bool debounceY = false;
   bool debounceX = false;
-  while(Competition.isDriverControl()) {
+  while (Competition.isDriverControl())
+  {
     bool const buttonYPressing = Controller1.ButtonY.pressing();
     bool const buttonXPressing = Controller1.ButtonX.pressing();
 
     // Listen for button Y to be pressed
-    if (buttonYPressing && !debounceY) {
+    if (buttonYPressing && !debounceY)
+    {
       debounceY = true;
       reversed = !reversed;
-    } else if (!buttonYPressing && debounceY) debounceY = false;
+    }
+    else if (!buttonYPressing && debounceY)
+      debounceY = false;
 
     // Listen for button X to be pressed
-    if (buttonXPressing && !debounceX) {
+    if (buttonXPressing && !debounceX)
+    {
       debounceX = true;
       turbo = !turbo;
-    } else if (!buttonXPressing && debounceX) debounceX = false;
+    }
+    else if (!buttonXPressing && debounceX)
+      debounceX = false;
   }
 }
 
 // =================================== UI =================================== //
 
-void driveUI() {
-  while(true) {
+void driveUI()
+{
+  while (true)
+  {
     // Game mode
     bool isAuton = Competition.isAutonomous();
     bool isDrive = Competition.isDriverControl();
     Brain.Screen.clearLine(1);
-    
-    if (isAuton) {
+
+    if (isAuton)
+    {
       std::ostringstream routineStr;
       routineStr << "(ROUTINE " << selectedAutonRoutine << ")";
       Brain.Screen.setCursor(1, 1);
@@ -196,7 +231,8 @@ void driveUI() {
       Brain.Screen.setFillColor(transparent);
     }
 
-    if (isDrive) {
+    if (isDrive)
+    {
       Brain.Screen.setCursor(1, 1);
       Brain.Screen.setFillColor(blue);
       Brain.Screen.print("DRIVE MODE");
@@ -208,17 +244,20 @@ void driveUI() {
     Brain.Screen.setCursor(2, 1);
 
     (turbo)
-    ? Brain.Screen.print("Turbo: On")
-    : Brain.Screen.print("Turbo: Off");
+        ? Brain.Screen.print("Turbo: On")
+        : Brain.Screen.print("Turbo: Off");
 
     // Reverse status
     Brain.Screen.clearLine(3);
     Brain.Screen.setCursor(3, 1);
 
-    if (reversed) {
+    if (reversed)
+    {
       Brain.Screen.setFillColor(green);
       Brain.Screen.print("Reverse: On");
-    } else {
+    }
+    else
+    {
       Brain.Screen.setFillColor(red);
       Brain.Screen.print("Reverse: Off");
     }
@@ -229,7 +268,8 @@ void driveUI() {
   }
 }
 
-void selectionUI() {
+void selectionUI()
+{
   // Draw first step
   ui::Textlabel stepLabel = ui::Textlabel("Select field origin position", 240, 0, 0.5, 0);
 
@@ -246,13 +286,16 @@ void selectionUI() {
   // Await user selection
   bool selected = false;
 
-  while(!selected) {
-    if (leftButton.pressing()) {
+  while (!selected)
+  {
+    if (leftButton.pressing())
+    {
       origin = autonutils::FieldOrigin::Left;
       selected = true;
     }
 
-    if (rightButton.pressing()) {
+    if (rightButton.pressing())
+    {
       origin = autonutils::FieldOrigin::Right;
       selected = true;
     }
@@ -265,37 +308,39 @@ void selectionUI() {
 
   // Draw next step
   stepLabel.setText("Select routine");
-
 }
 
 // ============================== Main Methods ============================== //
 
-void pre_auton(void) {
+void pre_auton(void)
+{
   vexcodeInit();
   selectionUI();
   driveUI();
 
-  routineManager.add(0, autonutils::FieldOrigin::Both, [&] () -> void {
+  routineManager.add(0, autonutils::FieldOrigin::Both, [&]() -> void
+                     {
     liftMotor.spinFor(360, deg, true);
     Drivetrain.driveFor(10, distanceUnits::cm, true);
-    intakeMotor.spin(forward);
-  });
+    intakeMotor.spin(forward); });
 
-  routineManager.add(1, autonutils::FieldOrigin::Both, [&] () -> void {
+  routineManager.add(1, autonutils::FieldOrigin::Both, [&]() -> void
+                     {
     forkliftMotor1.spinFor(forward, 360, deg, false);
     forkliftMotor2.spinFor(forward, 360, deg, false);
     Drivetrain.driveFor(75, distanceUnits::cm, true);
     Drivetrain.driveFor(-75, distanceUnits::cm, true);
     forkliftMotor1.spinFor(reverse, 360, deg, false);
-    forkliftMotor2.spinFor(reverse, 360, deg, false);
-  });
+    forkliftMotor2.spinFor(reverse, 360, deg, false); });
 }
 
-void autonomous(void) {
+void autonomous(void)
+{
   routineManager.exec(selectedAutonRoutine);
 }
 
-void usercontrol(void) {
+void usercontrol(void)
+{
   thread driveLoop = thread(driveControlLoop);
   thread forkLoop = thread(forkliftControlLoop);
   thread btnListener = thread(buttonListener);
@@ -309,7 +354,8 @@ void usercontrol(void) {
 
 // =============================== Entrypoint =============================== //
 
-int main() {
+int main()
+{
   // Set up callbacks for autonomous and driver control periods.
   Competition.autonomous(autonomous);
   Competition.drivercontrol(usercontrol);
@@ -318,7 +364,8 @@ int main() {
   pre_auton();
 
   // Prevent main from exiting with an infinite loop.
-  while (true) {
+  while (true)
+  {
     vex::wait(100, msec);
   }
 }
