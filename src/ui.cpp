@@ -42,6 +42,7 @@ namespace ui
 			yPos = y - (height * ay);
 			text = t;
 		}
+		~Textlabel() {};
 
 		void setFont(vex::fontType f)
 		{
@@ -95,6 +96,7 @@ namespace ui
 			yPos = y - (h * ay);
 			width = w, height = h;
 		}
+		~Button() {}
 
 		bool pressing()
 		{

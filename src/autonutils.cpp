@@ -29,6 +29,7 @@ namespace autonutils
 
 	public:
 		RoutineManager() {}
+		~RoutineManager() {}
 
 		std::vector<int> find(int s)
 		{

@@ -38,6 +38,7 @@ namespace autonutils
 
 	public:
 		RoutineManager();
+		~RoutineManager();
 
 		/**
 		 * @brief Find ids of routines that start from a specified side

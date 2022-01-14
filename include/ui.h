@@ -53,6 +53,7 @@ namespace ui
 		 * @param ay Y coordinate of anchor point
 		 */
 		Textlabel(std::string t, int x, int y, double ax = 0, double ay = 0);
+		~Textlabel();
 
 		/**
 		 * @brief Set font type
@@ -106,6 +107,7 @@ namespace ui
 		 * @param ay Y coordinate of anchor point
 		 */
 		Button(int x, int y, int w, int h, double ax = 0, double ay = 0);
+		~Button();
 
 		/**
 		 * @brief Check if button is pressing
