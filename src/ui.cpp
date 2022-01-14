@@ -42,7 +42,7 @@ namespace ui
 			yPos = y - (height * ay);
 			text = t;
 		}
-		~Textlabel() {};
+		~Textlabel() {}
 
 		void setFont(vex::fontType f)
 		{
