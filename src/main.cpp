@@ -318,20 +318,20 @@ void pre_auton(void)
 	selectionUI();
 	driveUI();
 
-	routineManager.add(0, autonutils::FieldOrigin::Both, [&]() -> void
-					   {
-    liftMotor.spinFor(360, deg, true);
-    Drivetrain.driveFor(10, distanceUnits::cm, true);
-    intakeMotor.spin(forward); });
+	routineManager.add(0, autonutils::FieldOrigin::Both, [&]() -> void {
+		liftMotor.spinFor(360, deg, true);
+		Drivetrain.driveFor(10, distanceUnits::cm, true);
+		intakeMotor.spin(forward); 
+	});
 
-	routineManager.add(1, autonutils::FieldOrigin::Both, [&]() -> void
-					   {
-    forkliftMotor1.spinFor(forward, 360, deg, false);
-    forkliftMotor2.spinFor(forward, 360, deg, false);
-    Drivetrain.driveFor(75, distanceUnits::cm, true);
-    Drivetrain.driveFor(-75, distanceUnits::cm, true);
-    forkliftMotor1.spinFor(reverse, 360, deg, false);
-    forkliftMotor2.spinFor(reverse, 360, deg, false); });
+	routineManager.add(1, autonutils::FieldOrigin::Both, [&]() -> void {
+		forkliftMotor1.spinFor(forward, 360, deg, false);
+		forkliftMotor2.spinFor(forward, 360, deg, false);
+		Drivetrain.driveFor(75, distanceUnits::cm, true);
+		Drivetrain.driveFor(-75, distanceUnits::cm, true);
+		forkliftMotor1.spinFor(reverse, 360, deg, false);
+		forkliftMotor2.spinFor(reverse, 360, deg, false); 
+	});
 }
 
 void autonomous(void)
