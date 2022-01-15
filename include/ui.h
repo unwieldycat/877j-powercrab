@@ -99,6 +99,7 @@ namespace ui
 	public:
 		/**
 		 * @brief Construct a new Button object
+		 * @param s Shape
 		 * @param x X coordinate of origin
 		 * @param y Y coordinate of origin
 		 * @param w Width of button
@@ -106,7 +107,7 @@ namespace ui
 		 * @param ax X coordinate of anchor point
 		 * @param ay Y coordinate of anchor point
 		 */
-		Button(int x, int y, int w, int h, double ax = 0, double ay = 0);
+		Button(int s, int x, int y, int w, int h, double ax = 0, double ay = 0);
 		~Button();
 
 		/**

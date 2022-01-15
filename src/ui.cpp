@@ -56,11 +56,12 @@ void ui::Textlabel::render() {
 	Brain.Screen.setFont(vex::fontType::mono20);
 }
 		
-ui::Button::Button(int x, int y, int w, int h, double ax, double ay)
+ui::Button::Button(int s, int x, int y, int w, int h, double ax, double ay)
 {
 	xPos = x - (w * ax);
 	yPos = y - (h * ay);
 	width = w, height = h;
+	shape = s;
 }
 
 ui::Button::~Button(){}
@@ -95,11 +96,11 @@ void ui::Button::setOutlineColor(vex::color c)
 
 void ui::Button::render()
 {
+	Brain.Screen.setPenColor(outline);
+	Brain.Screen.setFillColor(color);
 	switch (shape)
 	{
 	case Shape::Rect:
-		Brain.Screen.setPenColor(outline);
-		Brain.Screen.setFillColor(color);
 		Brain.Screen.drawRectangle(
 			xPos,
 			yPos,
@@ -107,7 +108,6 @@ void ui::Button::render()
 			height);
 		break;
 	case Shape::Circle:
-		Brain.Screen.setPenColor(outline);
 		Brain.Screen.drawCircle(
 			xPos,
 			yPos,
