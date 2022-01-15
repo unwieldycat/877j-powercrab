@@ -119,6 +119,6 @@ void ui::Button::render()
 	{
 		int textOffsetX = Brain.Screen.getStringWidth(text.c_str());
 		int textOffsetY = Brain.Screen.getStringHeight(text.c_str());
-		Brain.Screen.printAt(xPos + width / 2 - textOffsetX, yPos + height / 2 - textOffsetY, text.c_str());
+		Brain.Screen.printAt(xPos + width / 2 - textOffsetX / 2, yPos + height / 2 + textOffsetY / 2, text.c_str());
 	}
 }
