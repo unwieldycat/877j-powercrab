@@ -169,38 +169,19 @@ void driveControlLoop()
     int const YPos = (reversed) ? -(Controller1.Axis3.position()) : Controller1.Axis3.position();
     int const XPos = (reversed) ? -(Controller1.Axis1.position()) : Controller1.Axis1.position();
 
-    // Foward-backward movement
-    // Check if control input is greater than 5 for deadzones
-    if (YPos > 5 || YPos < -5)
-    {
-      Drivetrain.setDriveVelocity(abs((turbo) ? YPos : YPos / 2), pct);
-      if (YPos < 0)
-        Drivetrain.drive(reverse);
-      if (YPos > 0)
-        Drivetrain.drive(forward);
+	if ((YPos > 5 || YPos < -5) || (XPos > 5 || XPos < -5)) {
+      LeftDriveSmart.setVelocity(YPos + XPos, pct);
+      RightDriveSmart.setVelocity(YPos - XPos, pct);
+      LeftDriveSmart.spin(forward);
+      RightDriveSmart.spin(forward);
       driving = true;
-    }
-    else if (driving)
-    {
-      Drivetrain.setDriveVelocity(0, pct);
+    } else if (driving) {
+      LeftDriveSmart.setVelocity(0, pct);
+      RightDriveSmart.setVelocity(0, pct);
       driving = false;
     }
 
-    // left-right movement
-    // Check if control input is greater than 5 for deadzones
-    if (XPos > 5 || XPos < -5)
-    {
-      Drivetrain.setTurnVelocity(XPos, pct);
-      Drivetrain.turn(right);
-      turning = true;
-    }
-    else if (turning)
-    {
-      Drivetrain.setTurnVelocity(0, pct);
-      turning = false;
-    }
-
-    vex::wait(20, msec);
+    vex::wait(5, msec);
   }
 }
 
