@@ -270,21 +270,24 @@ void driveUI()
 
 void selectionUI()
 {
+	// Initalize variables
+	bool selected;
+
 	// Draw first step
 	ui::Textlabel stepLabel = ui::Textlabel("Select field origin position", 240, 0, 0.5, 0);
 
-	ui::Button leftButton = ui::Button(0, 240, 240, 100, 0, 1);
+	ui::Button leftButton = ui::Button(ui::Shape::Rect, 0, 240, 240, 100, 0, 1);
 	leftButton.setColor(color(0, 0, 255));
 	leftButton.setText("Left");
 	leftButton.render();
 
-	ui::Button rightButton = ui::Button(480, 240, 240, 100, 1, 1);
+	ui::Button rightButton = ui::Button(ui::Shape::Rect, 480, 240, 240, 100, 1, 1);
 	rightButton.setColor(color(255, 0, 0));
 	rightButton.setText("Right");
 	rightButton.render();
 
 	// Await user selection
-	bool selected = false;
+	selected = false;
 
 	while (!selected)
 	{
@@ -303,11 +306,67 @@ void selectionUI()
 
 	// Clear screen
 	Brain.Screen.clearScreen();
-	delete &leftButton;
-	delete &rightButton;
 
 	// Draw next step
 	stepLabel.setText("Select routine");
+
+	// Draw routine label
+	ui::Textlabel routineLabel = ui::Textlabel("X", 240, 120, 0.5, 0.5);
+	routineLabel.render();
+
+	// Get routines from routineManager
+	std::vector<int> routines = routineManager.find(autonutils::FieldOrigin::Left);
+
+	// Inline function to update routine label
+	auto const updateRoutineLabel = [&](int id) -> void {
+		// Convert routine id at index to string
+		std::ostringstream stringified;
+		stringified << id;
+		
+		// Re-render
+		routineLabel.setText(stringified.str());
+		routineLabel.render();
+	};
+	
+	// Render buttons
+	ui::Button down = ui::Button(ui::Shape::Rect, 0, 240, 100, 100, 0, 1);
+	down.setColor(vex::color(255, 0, 0));
+	down.setText("Down");
+	down.render();
+
+	ui::Button up = ui::Button(ui::Shape::Rect, 480, 240, 100, 100, 1, 1);
+	up.setColor(vex::color(0, 255, 0));
+	up.setText("Up");
+	up.render();
+
+	ui::Button done = ui::Button(ui::Shape::Rect, 240, 120, 100, 100, 0.5, 1);
+	up.setColor(vex::color(0, 0, 255));
+	up.setText("Done");
+	up.render();
+
+	// Await user selection
+	int routineIndex = 0;
+	selected = false;
+	
+	while (!selected) {
+		if (down.pressing() && routineIndex > 0) {
+			routineIndex--;
+			selectedAutonRoutine = routines[routineIndex];
+			updateRoutineLabel(selectedAutonRoutine);
+		}
+
+		if (up.pressing() && routineIndex < routines.size() - 1) {
+			routineIndex++;
+			selectedAutonRoutine = routines[routineIndex];
+			updateRoutineLabel(selectedAutonRoutine);
+		}
+
+		if (done.pressing()) selected = true;
+	}
+
+	// Clear screen and reset pen
+	Brain.Screen.clearScreen();
+	Brain.Screen.setFillColor(transparent);
 }
 
 // ============================== Main Methods ============================== //
