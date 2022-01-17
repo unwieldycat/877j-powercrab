@@ -162,7 +162,6 @@ void forkliftControlLoop()
 void driveControlLoop()
 {
   bool driving = false;
-  bool turning = false;
 
   while (Competition.isDriverControl())
   {
