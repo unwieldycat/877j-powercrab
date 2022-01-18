@@ -23,7 +23,6 @@ using namespace vex;
 competition Competition;
 int selectedAutonRoutine;
 bool reversed = false;
-bool turbo = false;
 
 // =========== Autonomous Routines =========== //
 
@@ -187,7 +186,6 @@ void driveControlLoop()
 void buttonListener()
 {
   bool debounceY = false;
-  bool debounceX = false;
   while (Competition.isDriverControl())
   {
     bool const buttonYPressing = Controller1.ButtonY.pressing();
@@ -199,17 +197,7 @@ void buttonListener()
       debounceY = true;
       reversed = !reversed;
     }
-    else if (!buttonYPressing && debounceY)
-      debounceY = false;
-
-    // Listen for button X to be pressed
-    if (buttonXPressing && !debounceX)
-    {
-      debounceX = true;
-      turbo = !turbo;
-    }
-    else if (!buttonXPressing && debounceX)
-      debounceX = false;
+    else if (!buttonYPressing && debounceY) debounceY = false;
   }
 }
 
@@ -239,14 +227,6 @@ void driveUI()
       Brain.Screen.print("DRIVE MODE");
       Brain.Screen.setFillColor(transparent);
     }
-
-    // Turbo status
-    Brain.Screen.clearLine(2);
-    Brain.Screen.setCursor(2, 1);
-
-    (turbo)
-        ? Brain.Screen.print("Turbo: On")
-        : Brain.Screen.print("Turbo: Off");
 
     // Reverse status
     Brain.Screen.clearLine(3);
