@@ -216,54 +216,26 @@ void driveUI()
 {
 	while (true)
 	{
-		// Game mode
-		bool isAuton = Competition.isAutonomous();
-		bool isDrive = Competition.isDriverControl();
-		Brain.Screen.clearLine(1);
+    // Default competition mode label
+    ui::Textlabel modeLabel("Disabled", 240, 120, 0.5, 0.5);
+    
+    // Set background and status text depending on game mode
+    if (Competition.isEnabled()) {
+      if (Competition.isAutonomous()) {
+        Brain.Screen.clearScreen(vex::color(255, 128, 0));
+        modeLabel.setText("Autonomous");
+      } 
 
-		if (isAuton)
-		{
-			std::ostringstream routineStr;
-			routineStr << "(ROUTINE " << selectedAutonRoutine << ")";
-			Brain.Screen.setCursor(1, 1);
-			Brain.Screen.setFillColor(orange);
-			Brain.Screen.print(("AUTON MODE" + routineStr.str()).c_str());
-			Brain.Screen.setFillColor(transparent);
-		}
+      if (Competition.isDriverControl()) {
+        Brain.Screen.clearScreen(vex::color(0, 128, 255));
+        modeLabel.setText("Driver");
+      }
+    } else Brain.Screen.clearScreen();
 
-		if (isDrive)
-		{
-			Brain.Screen.setCursor(1, 1);
-			Brain.Screen.setFillColor(blue);
-			Brain.Screen.print("DRIVE MODE");
-			Brain.Screen.setFillColor(transparent);
-		}
+    // Render mode label
+    modeLabel.render();
 
-		// Turbo status
-		Brain.Screen.clearLine(2);
-		Brain.Screen.setCursor(2, 1);
-
-		(turbo)
-			? Brain.Screen.print("Turbo: On")
-			: Brain.Screen.print("Turbo: Off");
-
-		// Reverse status
-		Brain.Screen.clearLine(3);
-		Brain.Screen.setCursor(3, 1);
-
-		if (reversed)
-		{
-			Brain.Screen.setFillColor(green);
-			Brain.Screen.print("Reverse: On");
-		}
-		else
-		{
-			Brain.Screen.setFillColor(red);
-			Brain.Screen.print("Reverse: Off");
-		}
-
-		Brain.Screen.setFillColor(transparent);
-
+    // Wait before next cycle to reduce cpu load
 		wait(1, sec);
 	}
 }
