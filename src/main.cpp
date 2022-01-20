@@ -223,11 +223,13 @@ void driveUI()
     if (Competition.isEnabled()) {
       if (Competition.isAutonomous()) {
         Brain.Screen.clearScreen(vex::color(255, 128, 0));
+		modeLabel.setBackgroundColor(vex::color(255, 128, 0));
         modeLabel.setText("Autonomous");
       } 
 
       if (Competition.isDriverControl()) {
         Brain.Screen.clearScreen(vex::color(0, 128, 255));
+		modeLabel.setBackgroundColor(vex::color(0, 128, 255));
         modeLabel.setText("Driver");
       }
     } else Brain.Screen.clearScreen();
@@ -246,7 +248,8 @@ void selectionUI()
 	bool selected;
 
 	// Draw first step
-	ui::Textlabel stepLabel = ui::Textlabel("Select field origin position", 240, 0, 0.5, 0);
+	ui::Textlabel stepLabel = ui::Textlabel("Select field origin position", 240, 16, 0.5, 0);
+  	stepLabel.render();
 
 	ui::Button leftButton = ui::Button(ui::Shape::Rect, 0, 240, 240, 100, 0, 1);
 	leftButton.setColor(color(0, 0, 255));
@@ -281,6 +284,7 @@ void selectionUI()
 
 	// Draw next step
 	stepLabel.setText("Select routine");
+  	stepLabel.render();
 
 	// Draw routine label
 	ui::Textlabel routineLabel = ui::Textlabel("X", 240, 120, 0.5, 0.5);
@@ -288,7 +292,6 @@ void selectionUI()
 
 	// Get routines from routineManager
 	std::vector<int> routines = routineManager.find(autonutils::FieldOrigin::Left);
-
 	// Inline function to update routine label
 	auto const updateRoutineLabel = [&](int id) -> void {
 		// Convert routine id at index to string
@@ -299,6 +302,13 @@ void selectionUI()
 		routineLabel.setText(stringified.str());
 		routineLabel.render();
 	};
+
+	updateRoutineLabel(routines[0]);
+
+	if (routines.empty()) {
+		selectedAutonRoutine = -1;
+		return;
+	}
 	
 	// Render buttons
 	ui::Button down = ui::Button(ui::Shape::Rect, 0, 240, 100, 100, 0, 1);
@@ -311,15 +321,15 @@ void selectionUI()
 	up.setText("Up");
 	up.render();
 
-	ui::Button done = ui::Button(ui::Shape::Rect, 240, 120, 100, 100, 0.5, 1);
-	up.setColor(vex::color(0, 0, 255));
-	up.setText("Done");
-	up.render();
+	ui::Button done = ui::Button(ui::Shape::Rect, 240, 240, 100, 100, 0.5, 1);
+	done.setColor(vex::color(0, 0, 255));
+	done.setText("Done");
+	done.render();
 
 	// Await user selection
 	int routineIndex = 0;
 	selected = false;
-	
+
 	while (!selected) {
 		if (down.pressing() && routineIndex > 0) {
 			routineIndex--;
@@ -346,8 +356,6 @@ void selectionUI()
 void pre_auton(void)
 {
 	vexcodeInit();
-	selectionUI();
-	driveUI();
 
 	routineManager.add(0, autonutils::FieldOrigin::Both, [&]() -> void {
 		liftMotor.spinFor(360, deg, true);
@@ -363,10 +371,14 @@ void pre_auton(void)
 		forkliftMotor1.spinFor(reverse, 360, deg, false);
 		forkliftMotor2.spinFor(reverse, 360, deg, false); 
 	});
+
+	selectionUI();
+	driveUI();
 }
 
 void autonomous(void)
 {
+	if (selectedAutonRoutine == -1) return;
 	routineManager.exec(selectedAutonRoutine);
 }
 
