@@ -11,13 +11,14 @@ ui::Element::~Element() {}
 
 ui::Textlabel::Textlabel(std::string t, int x, int y, double ax, double ay)
 {
-	width = Brain.Screen.getStringWidth(t.c_str());
-	height = Brain.Screen.getStringHeight(t.c_str());
+	color = vex::color(255, 255, 255);
+	font = vex::fontType::mono20;
+	width = Brain.Screen.getStringWidth(text.c_str());
+	height = Brain.Screen.getStringHeight(text.c_str());
 	xPos = x - (width * ax);
 	yPos = y - (height * ay);
 	text = t;
 }
-
 
 ui::Textlabel::~Textlabel(){}
 
@@ -47,8 +48,12 @@ void ui::Textlabel::render() {
 	Brain.Screen.setPenColor(color);
 	Brain.Screen.setFont(font);
 
+	// Get width and height
+	width = Brain.Screen.getStringWidth(text.c_str());
+	height = Brain.Screen.getStringHeight(text.c_str());
+
 	// Draw text
-	Brain.Screen.printAt(xPos + width / 2 - width, yPos + height / 2 - height, text.c_str());
+	Brain.Screen.printAt(xPos - (width / 2), yPos + (height / 2), text.c_str());
 
 	// Reset colors
 	Brain.Screen.setFillColor(transparent);
