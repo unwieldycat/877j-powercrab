@@ -15,8 +15,7 @@ std::vector<int> autonutils::RoutineManager::find(int s)
 	std::vector<int> matches;
 	for (Routine &r : routines)
 	{
-		if (r.side == s)
-			matches.push_back(r.id);
+		if (r.side == s || r.side == autonutils::FieldOrigin::Both) matches.push_back(r.id);
 	}
 	return matches;
 }
