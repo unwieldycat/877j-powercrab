@@ -32,6 +32,7 @@ autonutils::RoutineManager routineManager;
 competition Competition;
 int selectedAutonRoutine;
 bool reversed = false;
+int origin;
 
 // ============================= Control Loops ============================= //
 
