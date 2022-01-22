@@ -322,8 +322,6 @@ void selectionUI()
 void pre_auton(void)
 {
 	vexcodeInit();
-	selectionUI();
-	driveUI();
 
 	routineManager.add(0, autonutils::FieldOrigin::Both, [&]() -> void {
 		liftMotor.spinFor(360, deg, true);
@@ -339,6 +337,9 @@ void pre_auton(void)
 		forkliftMotor1.spinFor(reverse, 360, deg, false);
 		forkliftMotor2.spinFor(reverse, 360, deg, false); 
 	});
+
+	selectionUI();
+	driveUI();
 }
 
 void autonomous(void)
