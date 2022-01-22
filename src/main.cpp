@@ -230,6 +230,7 @@ void driveUI()
       if (Competition.isDriverControl()) {
         Brain.Screen.clearScreen(vex::color(0, 128, 255));
         modeLabel.setText("Driver");
+
       }
     } else Brain.Screen.clearScreen();
 
