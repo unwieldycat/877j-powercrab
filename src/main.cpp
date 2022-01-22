@@ -284,14 +284,14 @@ void selectionUI()
 
 	// Draw next step
 	stepLabel.setText("Select routine");
-  stepLabel.render();
+  	stepLabel.render();
 
 	// Draw routine label
 	ui::Textlabel routineLabel = ui::Textlabel("X", 240, 120, 0.5, 0.5);
 	routineLabel.render();
 
 	// Get routines from routineManager
-	std::vector<int> routines = routineManager.find(autonutils::FieldOrigin::Left);
+	std::vector<int> routines = routineManager.find(origin);
 	// Inline function to update routine label
 	auto const updateRoutineLabel = [&](int id) -> void {
 		// Convert routine id at index to string
@@ -303,10 +303,10 @@ void selectionUI()
 		routineLabel.render();
 	};
 
-  if (routines.empty()) {
-    selectedAutonRoutine = -1;
-    return;
-  }
+	if (routines.empty()) {
+		selectedAutonRoutine = -1;
+		return;
+	}
 	
 	// Render buttons
 	ui::Button down = ui::Button(ui::Shape::Rect, 0, 240, 100, 100, 0, 1);
