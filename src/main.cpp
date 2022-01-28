@@ -32,7 +32,6 @@ autonutils::RoutineManager routineManager;
 competition Competition;
 int selectedAutonRoutine;
 bool reversed = false;
-bool turbo = false;
 int origin;
 
 // ============================= Control Loops ============================= //
@@ -139,76 +138,45 @@ void forkliftControlLoop()
 
 void driveControlLoop()
 {
-	bool driving = false;
-	bool turning = false;
+  bool driving = false;
 
-	while (Competition.isDriverControl())
-	{
-		int const YPos = (reversed) ? -(Controller1.Axis3.position()) : Controller1.Axis3.position();
-		int const XPos = (reversed) ? -(Controller1.Axis1.position()) : Controller1.Axis1.position();
+  while (Competition.isDriverControl())
+  {
+    int const YPos = (reversed) ? -(Controller1.Axis3.position()) : Controller1.Axis3.position();
+    int const XPos = (reversed) ? -(Controller1.Axis1.position()) : Controller1.Axis1.position();
 
-		// Foward-backward movement
-		// Check if control input is greater than 5 for deadzones
-		if (YPos > 5 || YPos < -5)
-		{
-			Drivetrain.setDriveVelocity(abs((turbo) ? YPos : YPos / 2), pct);
-			if (YPos < 0)
-				Drivetrain.drive(reverse);
-			if (YPos > 0)
-				Drivetrain.drive(forward);
-			driving = true;
-		}
-		else if (driving)
-		{
-			Drivetrain.setDriveVelocity(0, pct);
-			driving = false;
-		}
+	if ((YPos > 5 || YPos < -5) || (XPos > 5 || XPos < -5)) {
+      LeftDriveSmart.setVelocity(YPos + XPos, pct);
+      RightDriveSmart.setVelocity(YPos - XPos, pct);
+      LeftDriveSmart.spin(forward);
+      RightDriveSmart.spin(forward);
+      driving = true;
+    } else if (driving) {
+      LeftDriveSmart.setVelocity(0, pct);
+      RightDriveSmart.setVelocity(0, pct);
+      driving = false;
+    }
 
-		// left-right movement
-		// Check if control input is greater than 5 for deadzones
-		if (XPos > 5 || XPos < -5)
-		{
-			Drivetrain.setTurnVelocity(XPos, pct);
-			Drivetrain.turn(right);
-			turning = true;
-		}
-		else if (turning)
-		{
-			Drivetrain.setTurnVelocity(0, pct);
-			turning = false;
-		}
-
-		vex::wait(20, msec);
-	}
+    vex::wait(5, msec);
+  }
 }
 
 void buttonListener()
 {
-	bool debounceY = false;
-	bool debounceX = false;
-	while (Competition.isDriverControl())
-	{
-		bool const buttonYPressing = Controller1.ButtonY.pressing();
-		bool const buttonXPressing = Controller1.ButtonX.pressing();
+  bool debounceY = false;
+  while (Competition.isDriverControl())
+  {
+    bool const buttonYPressing = Controller1.ButtonY.pressing();
+    bool const buttonXPressing = Controller1.ButtonX.pressing();
 
-		// Listen for button Y to be pressed
-		if (buttonYPressing && !debounceY)
-		{
-			debounceY = true;
-			reversed = !reversed;
-		}
-		else if (!buttonYPressing && debounceY)
-			debounceY = false;
-
-		// Listen for button X to be pressed
-		if (buttonXPressing && !debounceX)
-		{
-			debounceX = true;
-			turbo = !turbo;
-		}
-		else if (!buttonXPressing && debounceX)
-			debounceX = false;
-	}
+    // Listen for button Y to be pressed
+    if (buttonYPressing && !debounceY)
+    {
+      debounceY = true;
+      reversed = !reversed;
+    }
+    else if (!buttonYPressing && debounceY) debounceY = false;
+  }
 }
 
 // =================================== UI =================================== //
@@ -249,7 +217,7 @@ void selectionUI()
 
 	// Draw first step
 	ui::Textlabel stepLabel = ui::Textlabel("Select field origin position", 240, 0, 0.5, 0);
-  stepLabel.render();
+  	stepLabel.render();
 
 	ui::Button leftButton = ui::Button(ui::Shape::Rect, 0, 240, 240, 100, 0, 1);
 	leftButton.setColor(color(0, 0, 255));
@@ -354,8 +322,6 @@ void selectionUI()
 void pre_auton(void)
 {
 	vexcodeInit();
-	selectionUI();
-	driveUI();
 
 	routineManager.add(0, autonutils::FieldOrigin::Both, [&]() -> void {
 		liftMotor.spinFor(-(360), deg, true);
@@ -378,6 +344,9 @@ void pre_auton(void)
 		forkliftMotor1.spinFor(forward, 360, deg, false);
 		forkliftMotor2.spinFor(forward, 360, deg, false); 
 	});
+
+	selectionUI();
+	driveUI();
 }
 
 void autonomous(void)

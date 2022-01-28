@@ -5,6 +5,8 @@ extern brain Brain;
 // VEXcode devices
 extern controller Controller1;
 extern limit LimitSwitchA;
+extern motor_group LeftDriveSmart;  // MANUALLY ADDED
+extern motor_group RightDriveSmart; // MANUALLY ADDED
 extern drivetrain Drivetrain;
 extern motor forkliftMotor1;
 extern motor forkliftMotor2;
