@@ -31,6 +31,7 @@ using namespace vex;
 autonutils::RoutineManager routineManager;
 competition Competition;
 int selectedAutonRoutine;
+bool doSkills = false;
 bool reversed = false;
 int origin;
 
@@ -231,11 +232,21 @@ void selectionUI()
 	rightButton.setText("Right");
 	rightButton.render();
 
+	ui::Button skillsButton = ui::Button(ui::Shape::Rect, 480, 0, 100, 50, 1, 0);
+	skillsButton.setColor(color(255, 128, 0));
+	skillsButton.setText("Skills");
+	skillsButton.render();
+
 	// Await user selection
 	selected = false;
 
 	while (!selected)
 	{
+		if (skillsButton.pressing()) {
+			doSkills = true;
+			return;
+		}
+
 		if (leftButton.pressing())
 		{
 			origin = autonutils::FieldOrigin::Left;
@@ -355,8 +366,50 @@ void pre_auton(void)
 
 void autonomous(void)
 {
-  if (selectedAutonRoutine == -1) return;
-	routineManager.exec(selectedAutonRoutine);
+	// Run autonomous routine if specified
+	if (selectedAutonRoutine > -1) {
+		routineManager.exec(selectedAutonRoutine);
+		return;
+	}
+
+	/******************/
+	/* SKILLS ROUTINE */
+	/******************/
+
+	// Set start heading to north
+	Drivetrain.setHeading(0, deg);
+
+	// Put forklift down
+	forkliftMotor1.spin(forward, 100, pct);
+	forkliftMotor2.spin(forward, 100, pct);
+	wait(2, sec);
+
+	// Drive to first mobile goal
+	Drivetrain.driveFor(60 * 2.5, distanceUnits::cm, true);
+	Drivetrain.turnToHeading(90, deg, true);
+	Drivetrain.driveFor(60, distanceUnits::cm, true);
+
+	// Raise forklift
+	forkliftMotor1.spin(reverse, 100, pct);
+	forkliftMotor2.spin(reverse, 100, pct);
+	wait(2, sec);
+
+	// Turn to origin side
+	Drivetrain.turnToHeading(180, deg, true);
+
+	// Put goal on origin side
+	Drivetrain.driveFor(60 * 1.5, distanceUnits::cm, true);
+	forkliftMotor1.spin(forward, 100, pct);
+	forkliftMotor2.spin(forward, 100, pct);
+	wait(2, sec);
+
+	// Go back to center
+	Drivetrain.driveFor(-(60 * 1.5), distanceUnits::cm, true);
+	Drivetrain.turnToHeading(180, deg, true);
+
+	// Move forward
+
+
 }
 
 void usercontrol(void)
