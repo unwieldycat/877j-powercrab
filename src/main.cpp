@@ -154,6 +154,8 @@ void driveControlLoop()
     } else if (driving) {
       LeftDriveSmart.setVelocity(0, pct);
       RightDriveSmart.setVelocity(0, pct);
+	  LeftDriveSmart.stop(hold);
+	  RightDriveSmart.stop(hold);
       driving = false;
     }
 
@@ -330,6 +332,8 @@ void pre_auton(void)
 	});
 
 	routineManager.add(1, autonutils::FieldOrigin::Both, [&]() -> void {
+		forkliftMotor1.setVelocity(100, pct);
+		forkliftMotor2.setVelocity(100, pct);
 		forkliftMotor1.spinFor(reverse, 360 + 180 + 60, deg, false);
 		forkliftMotor2.spinFor(reverse, 360 + 180 + 60, deg, false);
 		Drivetrain.driveFor(100, distanceUnits::cm, true);
@@ -346,7 +350,7 @@ void pre_auton(void)
 	});
 
 	selectionUI();
-	driveUI();
+	driveUI(); 
 }
 
 void autonomous(void)
