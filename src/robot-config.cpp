@@ -20,6 +20,7 @@ drivetrain Drivetrain = drivetrain(LeftDriveSmart, RightDriveSmart, 319.19, 295,
 motor forkliftMotor1 = motor(PORT4, ratio36_1, true);
 motor forkliftMotor2 = motor(PORT7, ratio36_1, false);
 motor liftMotor = motor(PORT11, ratio36_1, false);
+motor liftGrab = motor(PORT5, ratio36_1, false);
 
 // VEXcode generated functions
 // define variable for remote controller enable/disable

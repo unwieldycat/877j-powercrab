@@ -11,6 +11,7 @@ extern drivetrain Drivetrain;
 extern motor forkliftMotor1;
 extern motor forkliftMotor2;
 extern motor liftMotor;
+extern motor liftGrab;
 
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Pro.
