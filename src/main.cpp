@@ -39,52 +39,23 @@ int origin;
 void liftControlLoop()
 {
 	bool liftActive = false;
-	bool intakeActive = false;
 	bool brakeLift = true;
 
 	while (Competition.isDriverControl())
 	{
-		bool const R2Pressing = Controller1.ButtonR2.pressing();
-		bool const R1Pressing = Controller1.ButtonR1.pressing();
 		bool const UpPressing = Controller1.ButtonUp.pressing();
 		bool const DownPressing = Controller1.ButtonDown.pressing();
 
-		// Check if button B is pressing when bucket is closed and open it
-		if (UpPressing && !DownPressing)
-		{
-			intakeActive = true;
-			intakeMotor.spin(forward);
-		}
-
-		// Check if button B is pressing when bucket is open and close it
-		if (DownPressing && !UpPressing)
-		{
-			intakeActive = true;
-			intakeMotor.spin(reverse);
-		}
-
-		// Turn off intake if no input
-		if (!UpPressing && !DownPressing && intakeActive)
-		{
-			intakeActive = false;
-			intakeMotor.stop();
-		}
-
 		// Check if running without user input and stop
-		if (!R2Pressing && !R1Pressing && liftActive)
+		if (!UpPressing && !DownPressing && liftActive)
 		{
 			liftMotor.stop(brake);
 			liftActive = false;
 			brakeLift = true;
 		}
 
-		if (brakeLift)
-		{
-			liftMotor.stop(brake);
-		}
-
 		// Listen for reverse input
-		if (R2Pressing && !R1Pressing)
+		if (DownPressing && !UpPressing)
 		{
 			liftMotor.spin(reverse, 100, pct);
 			liftActive = true;
@@ -92,7 +63,7 @@ void liftControlLoop()
 		}
 
 		// Listen for foward input
-		if (R1Pressing && !R2Pressing)
+		if (UpPressing && !DownPressing)
 		{
 			liftMotor.spin(forward, 100, pct);
 			liftActive = true;
