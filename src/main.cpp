@@ -376,6 +376,8 @@ void autonomous(void)
 	/* SKILLS ROUTINE */
 	/******************/
 
+	// Step 1: Push mobile goals to origin side
+
 	// Set start heading to north
 	Drivetrain.setHeading(0, deg);
 
@@ -393,37 +395,33 @@ void autonomous(void)
 	// Pick up goal
 	Drivetrain.driveFor(60, distanceUnits::cm, true);
 
-	// Raise forklift
-	forkliftMotor1.spin(forward, 100, pct);
-	forkliftMotor2.spin(forward, 100, pct);
-	wait(1.5, sec);
-	forkliftMotor1.stop();
-	forkliftMotor2.stop();
+	// Loop this block of code 3 times
+	for(int i = 0; i < 3; i++) {
+		// Raise forklift
+		forkliftMotor1.spin(forward, 100, pct);
+		forkliftMotor2.spin(forward, 100, pct);
+		wait(1.5, sec);
+		forkliftMotor1.stop();
+		forkliftMotor2.stop();
 
-	// Turn to origin side
-	Drivetrain.turnToHeading(180, deg, true);
+		// Turn to origin side
+		Drivetrain.turnToHeading(180, deg, true);
 
-	// Put goal on origin side
-	Drivetrain.driveFor(60 * 1.5, distanceUnits::cm, true);
-	forkliftMotor1.spin(reverse, 100, pct);
-	forkliftMotor2.spin(reverse, 100, pct);
-	wait(1.5, sec);
-	forkliftMotor1.stop();
-	forkliftMotor2.stop();
+		// Put goal on origin side
+		Drivetrain.driveFor(60, distanceUnits::cm, true);
+		forkliftMotor1.spin(reverse, 100, pct);
+		forkliftMotor2.spin(reverse, 100, pct);
+		wait(1.5, sec);
+		forkliftMotor1.stop();
+		forkliftMotor2.stop();
 
-	// Reset forklifts
-	forkliftMotor1.spin(forward, 100, pct);
-	forkliftMotor2.spin(forward, 100, pct);
-	wait(1.5, sec);
-	forkliftMotor1.stop();
-	forkliftMotor2.stop();
+		// Go back to center
+		Drivetrain.driveFor(-60, distanceUnits::cm, true);
+		Drivetrain.turnToHeading(90, deg, true);
 
-	// Go back to center
-	Drivetrain.driveFor(-(60 * 1.5), distanceUnits::cm, true);
-	Drivetrain.turnToHeading(180, deg, true);
-
-	// Move forward
-	Drivetrain.driveFor(60 * 1.5, distanceUnits::cm, true);
+		// Pick up next goal if not last goal
+		if (i < 3) Drivetrain.driveFor(60 * 1.5, distanceUnits::cm, true);
+	}
 	
 }
 
