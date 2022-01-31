@@ -9,7 +9,6 @@
 // Drivetrain           drivetrain    3, 2, 6, 1      
 // forkliftMotor1       motor         4               
 // forkliftMotor2       motor         7               
-// intakeMotor          motor         5               
 // liftMotor            motor         11              
 // ---- END VEXCODE CONFIGURED DEVICES ----
 
@@ -299,7 +298,7 @@ void pre_auton(void)
 	routineManager.add(0, autonutils::FieldOrigin::Both, [&]() -> void {
 		liftMotor.spinFor(-(360), deg, true);
 		Drivetrain.driveFor(40, distanceUnits::cm, true);
-		intakeMotor.spin(forward); 
+		//intakeMotor.spin(forward); 
 	});
 
 	routineManager.add(1, autonutils::FieldOrigin::Both, [&]() -> void {
