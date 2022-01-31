@@ -367,7 +367,7 @@ void pre_auton(void)
 void autonomous(void)
 {
 	// Run autonomous routine if specified
-	if (selectedAutonRoutine > -1) {
+	if (selectedAutonRoutine < -1) {
 		routineManager.exec(selectedAutonRoutine);
 		return;
 	}
@@ -380,9 +380,11 @@ void autonomous(void)
 	Drivetrain.setHeading(0, deg);
 
 	// Put forklift down
-	forkliftMotor1.spin(forward, 100, pct);
-	forkliftMotor2.spin(forward, 100, pct);
-	wait(2, sec);
+	forkliftMotor1.spin(reverse, 100, pct);
+	forkliftMotor2.spin(reverse, 100, pct);
+	wait(1.5, sec);
+	forkliftMotor1.stop();
+	forkliftMotor2.stop();
 
 	// Drive to first mobile goal
 	Drivetrain.driveFor(60 * 2.5, distanceUnits::cm, true);
@@ -390,26 +392,37 @@ void autonomous(void)
 	Drivetrain.driveFor(60, distanceUnits::cm, true);
 
 	// Raise forklift
-	forkliftMotor1.spin(reverse, 100, pct);
-	forkliftMotor2.spin(reverse, 100, pct);
-	wait(2, sec);
+	forkliftMotor1.spin(forward, 100, pct);
+	forkliftMotor2.spin(forward, 100, pct);
+	wait(1.5, sec);
+	forkliftMotor1.stop();
+	forkliftMotor2.stop();
 
 	// Turn to origin side
 	Drivetrain.turnToHeading(180, deg, true);
 
 	// Put goal on origin side
 	Drivetrain.driveFor(60 * 1.5, distanceUnits::cm, true);
+	forkliftMotor1.spin(reverse, 100, pct);
+	forkliftMotor2.spin(reverse, 100, pct);
+	wait(1.5, sec);
+	forkliftMotor1.stop();
+	forkliftMotor2.stop();
+
+	// Reset forklifts
 	forkliftMotor1.spin(forward, 100, pct);
 	forkliftMotor2.spin(forward, 100, pct);
-	wait(2, sec);
+	wait(1.5, sec);
+	forkliftMotor1.stop();
+	forkliftMotor2.stop();
 
 	// Go back to center
 	Drivetrain.driveFor(-(60 * 1.5), distanceUnits::cm, true);
 	Drivetrain.turnToHeading(180, deg, true);
 
 	// Move forward
-
-
+	Drivetrain.driveFor(60 * 1.5, distanceUnits::cm, true);
+	
 }
 
 void usercontrol(void)
