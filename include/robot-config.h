@@ -10,7 +10,6 @@ extern motor_group RightDriveSmart; // MANUALLY ADDED
 extern drivetrain Drivetrain;
 extern motor forkliftMotor1;
 extern motor forkliftMotor2;
-extern motor intakeMotor;
 extern motor liftMotor;
 
 /**
