@@ -379,6 +379,10 @@ void autonomous(void)
 	// Set start heading to north
 	Drivetrain.setHeading(0, deg);
 
+	// Drive to first mobile goal
+	Drivetrain.driveFor(60 * 2.5, distanceUnits::cm, true);
+	Drivetrain.turnToHeading(90, deg, true);
+
 	// Put forklift down
 	forkliftMotor1.spin(reverse, 100, pct);
 	forkliftMotor2.spin(reverse, 100, pct);
@@ -386,9 +390,7 @@ void autonomous(void)
 	forkliftMotor1.stop();
 	forkliftMotor2.stop();
 
-	// Drive to first mobile goal
-	Drivetrain.driveFor(60 * 2.5, distanceUnits::cm, true);
-	Drivetrain.turnToHeading(90, deg, true);
+	// Pick up goal
 	Drivetrain.driveFor(60, distanceUnits::cm, true);
 
 	// Raise forklift
