@@ -19,7 +19,6 @@ motor_group RightDriveSmart = motor_group(rightMotorA, rightMotorB);
 drivetrain Drivetrain = drivetrain(LeftDriveSmart, RightDriveSmart, 319.19, 295, 40, mm, 1);
 motor forkliftMotor1 = motor(PORT4, ratio36_1, true);
 motor forkliftMotor2 = motor(PORT7, ratio36_1, false);
-motor intakeMotor = motor(PORT5, ratio18_1, false);
 motor liftMotor = motor(PORT11, ratio36_1, false);
 
 // VEXcode generated functions
