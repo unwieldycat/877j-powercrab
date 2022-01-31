@@ -422,7 +422,43 @@ void autonomous(void)
 		// Pick up next goal if not last goal
 		if (i < 3) Drivetrain.driveFor(60 * 1.5, distanceUnits::cm, true);
 	}
+
+	// Reset forklift
+	forkliftMotor1.spin(forward, 100, pct);
+	forkliftMotor2.spin(forward, 100, pct);
+	wait(1.5, sec);
+	forkliftMotor1.stop();
+	forkliftMotor2.stop();
+
+	// Step 2: Retrieve alliance goal and navigate to balance
+
+	// Line up on axis of alliance goal and turn to game north
+	Drivetrain.driveFor(30, distanceUnits::cm, true);
+	Drivetrain.turnToHeading(0, rotationUnits::deg, true);
+
+	// Reverse into mobile goal
+	Drivetrain.driveFor(-60 * 1.5, distanceUnits::cm, true);
+	// TODO: Implement grabber motor
+
+	// Drive to axis of balance
+	Drivetrain.driveFor(60 * 3, distanceUnits::cm, true);
+	Drivetrain.turnToHeading(292, rotationUnits::deg, true);
+	Drivetrain.driveFor(67, distanceUnits::cm, true);
+	Drivetrain.turnToHeading(270, rotationUnits::deg, true);
+
+	// Step 3: Get onto balance
+
+	// Put forklift down
+	forkliftMotor1.spin(reverse, 100, pct);
+	forkliftMotor2.spin(reverse, 100, pct);
+	wait(1.5, sec);
+	forkliftMotor1.stop();
+	forkliftMotor2.stop();
 	
+	// Drive onto balance
+	Drivetrain.setDriveVelocity(100, percentUnits::pct);
+	Drivetrain.driveFor(90, distanceUnits::cm, true);
+
 }
 
 void usercontrol(void)
