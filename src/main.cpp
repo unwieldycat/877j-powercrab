@@ -10,6 +10,7 @@
 // forkliftMotor1       motor         4               
 // forkliftMotor2       motor         7               
 // liftMotor            motor         11              
+// liftGrab             motor         5               
 // ---- END VEXCODE CONFIGURED DEVICES ----
 
 // ================================ Imports ================================ //
@@ -34,6 +35,35 @@ bool reversed = false;
 int origin;
 
 // ============================= Control Loops ============================= //
+
+void grabControlLoop() {
+	bool grabActive = false;
+	while (Competition.isDriverControl()) {
+		bool const R1Pressing = Controller1.ButtonR1.pressing();
+		bool const R2Pressing = Controller1.ButtonR2.pressing();
+
+		// Check if running without user input and stop
+		if (!R1Pressing && !R2Pressing && grabActive)
+		{
+			liftMotor.stop(brake);
+			grabActive = false;
+		}
+
+		// Listen for reverse input
+		if (R2Pressing && !R1Pressing)
+		{
+			liftMotor.spin(reverse, 100, pct);
+			grabActive = true;
+		}
+
+		// Listen for foward input
+		if (R1Pressing && !R2Pressing)
+		{
+			liftMotor.spin(forward, 100, pct);
+			grabActive = true;
+		}
+	}
+}
 
 void liftControlLoop()
 {
