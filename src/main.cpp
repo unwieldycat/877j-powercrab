@@ -336,6 +336,7 @@ void pre_auton(void)
 		forkliftMotor2.setVelocity(100, pct);
 		forkliftMotor1.spinFor(reverse, 360 + 180 + 60, deg, false);
 		forkliftMotor2.spinFor(reverse, 360 + 180 + 60, deg, false);
+		Drivetrain.setDriveVelocity(100, pct);
 		Drivetrain.driveFor(100, distanceUnits::cm, true);
 		forkliftMotor1.stop(coast);
 		forkliftMotor2.stop(coast);
