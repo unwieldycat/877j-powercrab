@@ -1,4 +1,4 @@
-// Written by Thurston Yates for team 877J
+  // Written by Thurston Yates for team 877J
 // 2021-2022
 
 // ---- START VEXCODE CONFIGURED DEVICES ----
@@ -382,38 +382,19 @@ void autonomous(void)
 	Drivetrain.setHeading(0, deg);
 
 	// Drive to first mobile goal
-	Drivetrain.driveFor(60 * 2.5, distanceUnits::cm, true);
+	Drivetrain.driveFor(60, distanceUnits::cm, true);
 	Drivetrain.turnToHeading(90, deg, true);
 
-	// Put forklift down
-	forkliftMotor1.spin(reverse, 100, pct);
-	forkliftMotor2.spin(reverse, 100, pct);
-	wait(1.5, sec);
-	forkliftMotor1.stop();
-	forkliftMotor2.stop();
-
 	// Pick up goal
-	Drivetrain.driveFor(60, distanceUnits::cm, true);
+	Drivetrain.driveFor(30, distanceUnits::cm, true);
 
 	// Loop this block of code 3 times
 	for(int i = 0; i < 3; i++) {
-		// Raise forklift
-		forkliftMotor1.spin(forward, 100, pct);
-		forkliftMotor2.spin(forward, 100, pct);
-		wait(1.5, sec);
-		forkliftMotor1.stop();
-		forkliftMotor2.stop();
-
 		// Turn to origin side
-		Drivetrain.turnToHeading(180, deg, true);
+		Drivetrain.turnToHeading(0, deg, true);
 
-		// Put goal on origin side
+		// Put goal on alliance side
 		Drivetrain.driveFor(60, distanceUnits::cm, true);
-		forkliftMotor1.spin(reverse, 100, pct);
-		forkliftMotor2.spin(reverse, 100, pct);
-		wait(1.5, sec);
-		forkliftMotor1.stop();
-		forkliftMotor2.stop();
 
 		// Go back to center
 		Drivetrain.driveFor(-60, distanceUnits::cm, true);
@@ -422,13 +403,6 @@ void autonomous(void)
 		// Pick up next goal if not last goal
 		if (i < 3) Drivetrain.driveFor(60 * 1.5, distanceUnits::cm, true);
 	}
-
-	// Reset forklift
-	forkliftMotor1.spin(forward, 100, pct);
-	forkliftMotor2.spin(forward, 100, pct);
-	wait(1.5, sec);
-	forkliftMotor1.stop();
-	forkliftMotor2.stop();
 
 	// Step 2: Retrieve alliance goal and navigate to balance
 
