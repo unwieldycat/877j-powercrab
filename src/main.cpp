@@ -377,16 +377,18 @@ void autonomous(void)
 	/******************/
 
 	// Step 1: Push mobile goals to origin side
-
+	
 	// Set start heading to north
 	Drivetrain.setHeading(0, deg);
 
 	// Drive to first mobile goal
-	Drivetrain.driveFor(60, distanceUnits::cm, true);
+	Drivetrain.drive(forward, 100, velocityUnits::pct);
+	wait(2, sec);
 	Drivetrain.turnToHeading(90, deg, true);
 
 	// Pick up goal
-	Drivetrain.driveFor(30, distanceUnits::cm, true);
+	Drivetrain.drive(forward, 50, velocityUnits::pct);
+	wait(1.75, sec);
 
 	// Loop this block of code 3 times
 	for(int i = 0; i < 3; i++) {
@@ -394,26 +396,33 @@ void autonomous(void)
 		Drivetrain.turnToHeading(0, deg, true);
 
 		// Put goal on alliance side
-		Drivetrain.driveFor(60, distanceUnits::cm, true);
+		Drivetrain.drive(forward, 100, velocityUnits::pct);
+		wait(2, sec);
 
 		// Go back to center
-		Drivetrain.driveFor(-60, distanceUnits::cm, true);
+		Drivetrain.drive(reverse, 100, velocityUnits::pct);
+		wait(2, sec);
 		Drivetrain.turnToHeading(90, deg, true);
 
+		if (i == 2) break;
+
 		// Pick up next goal if not last goal
-		if (i < 3) Drivetrain.driveFor(60 * 1.5, distanceUnits::cm, true);
+		Drivetrain.drive(forward, 50, velocityUnits::pct);
+		wait(2.5, sec);
 	}
 
 	// Step 2: Retrieve alliance goal and navigate to balance
 
 	// Line up on axis of alliance goal and turn to game north
-	Drivetrain.driveFor(30, distanceUnits::cm, true);
+	Drivetrain.drive(forward, 50, velocityUnits::pct);
+	wait(2.5, sec);
 	Drivetrain.turnToHeading(0, rotationUnits::deg, true);
 
 	// Reverse into mobile goal
-	Drivetrain.driveFor(-60 * 1.5, distanceUnits::cm, true);
+	Drivetrain.drive(reverse, 100, velocityUnits::pct);
+	wait(1.5, sec);
 	// TODO: Implement grabber motor
-
+	
 	// Drive to axis of balance
 	Drivetrain.driveFor(60 * 3, distanceUnits::cm, true);
 	Drivetrain.turnToHeading(292, rotationUnits::deg, true);
