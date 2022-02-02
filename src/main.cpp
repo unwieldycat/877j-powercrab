@@ -45,7 +45,7 @@ void grabControlLoop() {
 		// Check if running without user input and stop
 		if (!R1Pressing && !R2Pressing && grabActive)
 		{
-			liftMotor.stop(brake);
+			liftMotor.stop(hold);
 			grabActive = false;
 		}
 
