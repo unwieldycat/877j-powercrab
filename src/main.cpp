@@ -6,7 +6,7 @@
 // [Name]               [Type]        [Port(s)]
 // Controller1          controller                    
 // LimitSwitchA         limit         A               
-// Drivetrain           drivetrain    3, 2, 6, 1      
+// Drivetrain           drivetrain    3, 2, 6, 1, 21  
 // forkliftMotor1       motor         4               
 // forkliftMotor2       motor         7               
 // intakeMotor          motor         5               
@@ -30,7 +30,7 @@ using namespace vex;
 
 autonutils::RoutineManager routineManager;
 competition Competition;
-int selectedAutonRoutine;
+int selectedAutonRoutine = 0;
 bool doSkills = false;
 bool reversed = false;
 int origin;
@@ -47,8 +47,8 @@ void liftControlLoop()
 	{
 		bool const R2Pressing = Controller1.ButtonR2.pressing();
 		bool const R1Pressing = Controller1.ButtonR1.pressing();
-		bool const UpPressing = Controller1.ButtonUp.pressing();
-		bool const DownPressing = Controller1.ButtonDown.pressing();
+		bool const UpPressing = Controller1.ButtonX.pressing();
+		bool const DownPressing = Controller1.ButtonB.pressing();
 
 		// Check if button B is pressing when bucket is closed and open it
 		if (UpPressing && !DownPressing)
@@ -243,7 +243,7 @@ void selectionUI()
 	while (!selected)
 	{
 		if (skillsButton.pressing()) {
-			doSkills = true;
+			selectedAutonRoutine = -1;
 			return;
 		}
 
@@ -343,21 +343,28 @@ void pre_auton(void)
 	});
 
 	routineManager.add(1, autonutils::FieldOrigin::Both, [&]() -> void {
-		forkliftMotor1.setVelocity(100, pct);
-		forkliftMotor2.setVelocity(100, pct);
-		forkliftMotor1.spinFor(reverse, 360 + 180 + 60, deg, false);
-		forkliftMotor2.spinFor(reverse, 360 + 180 + 60, deg, false);
-		Drivetrain.driveFor(100, distanceUnits::cm, true);
+		forkliftMotor1.spin(reverse, 100, pct);
+		forkliftMotor2.spin(reverse, 100, pct);
+		Drivetrain.drive(forward, 100, velocityUnits::pct);
+    vex::wait(2.5, sec);
+
+    Drivetrain.stop();
 		forkliftMotor1.stop(coast);
 		forkliftMotor2.stop(coast);
-		forkliftMotor1.spinFor(forward, 180, deg, false);
-		forkliftMotor2.spinFor(forward, 180, deg, false);
+		forkliftMotor1.spin(forward, 100, pct);
+		forkliftMotor2.spin(forward, 100, pct);
 		wait(2, sec);
 		forkliftMotor1.stop(coast);
 		forkliftMotor2.stop(coast);
-		Drivetrain.driveFor(-75, distanceUnits::cm, true);
-		forkliftMotor1.spinFor(forward, 360, deg, false);
-		forkliftMotor2.spinFor(forward, 360, deg, false); 
+
+		Drivetrain.drive(reverse, 100, velocityUnits::pct);
+		forkliftMotor1.spin(forward, 100, pct);
+		forkliftMotor2.spin(forward, 100, pct); 
+    vex::wait(2.5, sec);
+    Drivetrain.stop();
+
+    forkliftMotor1.stop();
+    forkliftMotor2.stop();
 	});
 
 	selectionUI();
@@ -367,7 +374,7 @@ void pre_auton(void)
 void autonomous(void)
 {
 	// Run autonomous routine if specified
-	if (selectedAutonRoutine < -1) {
+	if (selectedAutonRoutine > -1) {
 		routineManager.exec(selectedAutonRoutine);
 		return;
 	}
