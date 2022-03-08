@@ -1,4 +1,4 @@
-// Written by Thurston Yates for team 877J
+  // Written by Thurston Yates for team 877J
 // 2021-2022
 
 // ---- START VEXCODE CONFIGURED DEVICES ----
@@ -6,7 +6,7 @@
 // [Name]               [Type]        [Port(s)]
 // Controller1          controller                    
 // LimitSwitchA         limit         A               
-// Drivetrain           drivetrain    3, 2, 6, 1      
+// Drivetrain           drivetrain    3, 2, 6, 1, 21  
 // forkliftMotor1       motor         4               
 // forkliftMotor2       motor         7               
 // liftMotor            motor         11              
@@ -30,7 +30,8 @@ using namespace vex;
 
 autonutils::RoutineManager routineManager;
 competition Competition;
-int selectedAutonRoutine;
+int selectedAutonRoutine = 0;
+bool doSkills = false;
 bool reversed = false;
 int origin;
 
@@ -40,7 +41,8 @@ void grabControlLoop() {
 	bool grabActive = false;
 	while (Competition.isDriverControl()) {
 		bool const R1Pressing = Controller1.ButtonR1.pressing();
-		bool const R2Pressing = Controller1.ButtonR2.pressing();
+		bool const UpPressing = Controller1.ButtonX.pressing();
+		bool const DownPressing = Controller1.ButtonB.pressing();
 
 		// Check if running without user input and stop
 		if (!R1Pressing && !R2Pressing && grabActive)
@@ -231,11 +233,21 @@ void selectionUI()
 	rightButton.setText("Right");
 	rightButton.render();
 
+	ui::Button skillsButton = ui::Button(ui::Shape::Rect, 480, 0, 100, 50, 1, 0);
+	skillsButton.setColor(color(255, 128, 0));
+	skillsButton.setText("Skills");
+	skillsButton.render();
+
 	// Await user selection
 	selected = false;
 
 	while (!selected)
 	{
+		if (skillsButton.pressing()) {
+			selectedAutonRoutine = -1;
+			return;
+		}
+
 		if (leftButton.pressing())
 		{
 			origin = autonutils::FieldOrigin::Left;
@@ -332,22 +344,28 @@ void pre_auton(void)
 	});
 
 	routineManager.add(1, autonutils::FieldOrigin::Both, [&]() -> void {
-		forkliftMotor1.setVelocity(100, pct);
-		forkliftMotor2.setVelocity(100, pct);
-		forkliftMotor1.spinFor(reverse, 360 + 180 + 60, deg, false);
-		forkliftMotor2.spinFor(reverse, 360 + 180 + 60, deg, false);
-		Drivetrain.setDriveVelocity(100, pct);
-		Drivetrain.driveFor(100, distanceUnits::cm, true);
+		forkliftMotor1.spin(reverse, 100, pct);
+		forkliftMotor2.spin(reverse, 100, pct);
+		Drivetrain.drive(forward, 100, velocityUnits::pct);
+    vex::wait(2.5, sec);
+
+    Drivetrain.stop();
 		forkliftMotor1.stop(coast);
 		forkliftMotor2.stop(coast);
-		forkliftMotor1.spinFor(forward, 180, deg, false);
-		forkliftMotor2.spinFor(forward, 180, deg, false);
+		forkliftMotor1.spin(forward, 100, pct);
+		forkliftMotor2.spin(forward, 100, pct);
 		wait(2, sec);
 		forkliftMotor1.stop(coast);
 		forkliftMotor2.stop(coast);
-		Drivetrain.driveFor(-75, distanceUnits::cm, true);
-		forkliftMotor1.spinFor(forward, 360, deg, false);
-		forkliftMotor2.spinFor(forward, 360, deg, false); 
+
+		Drivetrain.drive(reverse, 100, velocityUnits::pct);
+		forkliftMotor1.spin(forward, 100, pct);
+		forkliftMotor2.spin(forward, 100, pct); 
+    vex::wait(2.5, sec);
+    Drivetrain.stop();
+
+    forkliftMotor1.stop();
+    forkliftMotor2.stop();
 	});
 
 	selectionUI();
@@ -356,8 +374,82 @@ void pre_auton(void)
 
 void autonomous(void)
 {
-  if (selectedAutonRoutine == -1) return;
-	routineManager.exec(selectedAutonRoutine);
+	// Run autonomous routine if specified
+	if (selectedAutonRoutine > -1) {
+		routineManager.exec(selectedAutonRoutine);
+		return;
+	}
+
+	/******************/
+	/* SKILLS ROUTINE */
+	/******************/
+
+	// Step 1: Push mobile goals to origin side
+	
+	// Set start heading to north
+	Drivetrain.setHeading(0, deg);
+
+	// Drive to first mobile goal
+	Drivetrain.drive(forward, 100, velocityUnits::pct);
+	wait(2, sec);
+	Drivetrain.turnToHeading(90, deg, true);
+
+	// Pick up goal
+	Drivetrain.drive(forward, 50, velocityUnits::pct);
+	wait(1.75, sec);
+
+	// Loop this block of code 3 times
+	for(int i = 0; i < 3; i++) {
+		// Turn to origin side
+		Drivetrain.turnToHeading(0, deg, true);
+
+		// Put goal on alliance side
+		Drivetrain.drive(forward, 100, velocityUnits::pct);
+		wait(2, sec);
+
+		// Go back to center
+		Drivetrain.drive(reverse, 100, velocityUnits::pct);
+		wait(2, sec);
+		Drivetrain.turnToHeading(90, deg, true);
+
+		if (i == 2) break;
+
+		// Pick up next goal if not last goal
+		Drivetrain.drive(forward, 50, velocityUnits::pct);
+		wait(2.5, sec);
+	}
+
+	// Step 2: Retrieve alliance goal and navigate to balance
+
+	// Line up on axis of alliance goal and turn to game north
+	Drivetrain.drive(forward, 50, velocityUnits::pct);
+	wait(2.5, sec);
+	Drivetrain.turnToHeading(0, rotationUnits::deg, true);
+
+	// Reverse into mobile goal
+	Drivetrain.drive(reverse, 100, velocityUnits::pct);
+	wait(1.5, sec);
+	// TODO: Implement grabber motor
+	
+	// Drive to axis of balance
+	Drivetrain.driveFor(60 * 3, distanceUnits::cm, true);
+	Drivetrain.turnToHeading(292, rotationUnits::deg, true);
+	Drivetrain.driveFor(67, distanceUnits::cm, true);
+	Drivetrain.turnToHeading(270, rotationUnits::deg, true);
+
+	// Step 3: Get onto balance
+
+	// Put forklift down
+	forkliftMotor1.spin(reverse, 100, pct);
+	forkliftMotor2.spin(reverse, 100, pct);
+	wait(1.5, sec);
+	forkliftMotor1.stop();
+	forkliftMotor2.stop();
+	
+	// Drive onto balance
+	Drivetrain.setDriveVelocity(100, percentUnits::pct);
+	Drivetrain.driveFor(90, distanceUnits::cm, true);
+
 }
 
 void usercontrol(void)
