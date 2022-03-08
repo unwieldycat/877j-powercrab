@@ -10,8 +10,8 @@ extern motor_group LeftDriveSmart; // MANUALLY ADDED
 extern motor_group RightDriveSmart; // MANUALLY ADDED
 extern motor forkliftMotor1;
 extern motor forkliftMotor2;
-extern motor intakeMotor;
 extern motor liftMotor;
+extern motor liftGrab;
 
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Pro.

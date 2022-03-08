@@ -9,8 +9,8 @@
 // Drivetrain           drivetrain    3, 2, 6, 1, 21  
 // forkliftMotor1       motor         4               
 // forkliftMotor2       motor         7               
-// intakeMotor          motor         5               
 // liftMotor            motor         11              
+// liftGrab             motor         5               
 // ---- END VEXCODE CONFIGURED DEVICES ----
 
 // ================================ Imports ================================ //
@@ -37,55 +37,56 @@ int origin;
 
 // ============================= Control Loops ============================= //
 
-void liftControlLoop()
-{
-	bool liftActive = false;
-	bool intakeActive = false;
-	bool brakeLift = true;
-
-	while (Competition.isDriverControl())
-	{
-		bool const R2Pressing = Controller1.ButtonR2.pressing();
+void grabControlLoop() {
+	bool grabActive = false;
+	while (Competition.isDriverControl()) {
 		bool const R1Pressing = Controller1.ButtonR1.pressing();
 		bool const UpPressing = Controller1.ButtonX.pressing();
 		bool const DownPressing = Controller1.ButtonB.pressing();
 
-		// Check if button B is pressing when bucket is closed and open it
-		if (UpPressing && !DownPressing)
+		// Check if running without user input and stop
+		if (!R1Pressing && !R2Pressing && grabActive)
 		{
-			intakeActive = true;
-			intakeMotor.spin(forward);
+			liftMotor.stop(hold);
+			grabActive = false;
 		}
 
-		// Check if button B is pressing when bucket is open and close it
-		if (DownPressing && !UpPressing)
+		// Listen for reverse input
+		if (R2Pressing && !R1Pressing)
 		{
-			intakeActive = true;
-			intakeMotor.spin(reverse);
+			liftMotor.spin(reverse, 100, pct);
+			grabActive = true;
 		}
 
-		// Turn off intake if no input
-		if (!UpPressing && !DownPressing && intakeActive)
+		// Listen for foward input
+		if (R1Pressing && !R2Pressing)
 		{
-			intakeActive = false;
-			intakeMotor.stop();
+			liftMotor.spin(forward, 100, pct);
+			grabActive = true;
 		}
+	}
+}
+
+void liftControlLoop()
+{
+	bool liftActive = false;
+	bool brakeLift = true;
+
+	while (Competition.isDriverControl())
+	{
+		bool const UpPressing = Controller1.ButtonUp.pressing();
+		bool const DownPressing = Controller1.ButtonDown.pressing();
 
 		// Check if running without user input and stop
-		if (!R2Pressing && !R1Pressing && liftActive)
+		if (!UpPressing && !DownPressing && liftActive)
 		{
 			liftMotor.stop(brake);
 			liftActive = false;
 			brakeLift = true;
 		}
 
-		if (brakeLift)
-		{
-			liftMotor.stop(brake);
-		}
-
 		// Listen for reverse input
-		if (R2Pressing && !R1Pressing)
+		if (DownPressing && !UpPressing)
 		{
 			liftMotor.spin(reverse, 100, pct);
 			liftActive = true;
@@ -93,7 +94,7 @@ void liftControlLoop()
 		}
 
 		// Listen for foward input
-		if (R1Pressing && !R2Pressing)
+		if (UpPressing && !DownPressing)
 		{
 			liftMotor.spin(forward, 100, pct);
 			liftActive = true;
@@ -339,7 +340,7 @@ void pre_auton(void)
 	routineManager.add(0, autonutils::FieldOrigin::Both, [&]() -> void {
 		liftMotor.spinFor(-(360), deg, true);
 		Drivetrain.driveFor(40, distanceUnits::cm, true);
-		intakeMotor.spin(forward); 
+		//intakeMotor.spin(forward); 
 	});
 
 	routineManager.add(1, autonutils::FieldOrigin::Both, [&]() -> void {
